@@ -137,6 +137,35 @@ app.use(function(req,res){
   res.status(404).render('404.handlebars');
 });
 
+/*________________________________________Cookie__________________________________*/
+app.get("/create-cookie", function(request, response){
+  console.log("Route: "+request.url)
+  response.cookie("lastVisit", Date.now())
+  response.end()
+})
+
+const cookieParser =require('cookie-parser')
+
+app.use(cookieParser())
+
+app.get("/log-cookie", function(request, response){
+  let counter=1
+  if(request.cookies.counter){
+    counter=parseInt(request.cookies.counter)+1
+  }
+  response.cookie("counter", counter)
+
+  console.log("Route: ",request.url)
+  console.log("Cookies: "+ JSON.stringify(request.cookies))
+
+  const lastVisit=parseInt(request.cookies.lastVisit)
+  console.log("Your last visit: "+lastVisit)
+  const counterCookie=parseInt(request.cookies.counter)
+  console.log("Number of visits: ", counterCookie)
+  response.end()
+})
+/*________________________________________session__________________________________*/
+
 // runs the app and listens to the port
 app.listen(port, () => {
     console.log(`Server running and listening on port ${port}...`)

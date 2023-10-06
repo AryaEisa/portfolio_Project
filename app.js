@@ -1,9 +1,11 @@
-const express = require('express') // loads the express package
+const express = require('express'); // loads the express package
 const { engine } = require('express-handlebars'); // loads handlebars for Express
-const port = 8080 // defines the port
-const app = express() // creates the Express application
-const sqlite3=require('sqlite3')
-const db=new sqlite3.Database('projects-jl.db')
+const session = require('express-session');
+const cookieParser = require('cookie-parser');
+const port = 8080; // defines the port
+const app = express(); // creates the Express application
+const sqlite3 = require('sqlite3');
+const db = new sqlite3.Database('projects-jl.db');
 
 // defines handlebars engine
 app.engine('handlebars', engine());
@@ -138,33 +140,57 @@ app.use(function(req,res){
 });
 
 /*________________________________________Cookie__________________________________*/
-app.get("/create-cookie", function(request, response){
-  console.log("Route: "+request.url)
-  response.cookie("lastVisit", Date.now())
-  response.end()
-})
+app.get("/create-cookie", function (request, response) {
+  console.log("Route: " + request.url);
+  response.cookie("lastVisit", Date.now());
+  response.end();
+});
 
-const cookieParser =require('cookie-parser')
+app.use(cookieParser());
 
-app.use(cookieParser())
-
-app.get("/log-cookie", function(request, response){
-  let counter=1
-  if(request.cookies.counter){
-    counter=parseInt(request.cookies.counter)+1
+app.get("/log-cookie", function (request, response) {
+  let counter = 1;
+  if (request.cookies.counter) {
+      counter = parseInt(request.cookies.counter) + 1;
   }
-  response.cookie("counter", counter)
+  response.cookie("counter", counter);
 
-  console.log("Route: ",request.url)
-  console.log("Cookies: "+ JSON.stringify(request.cookies))
+  console.log("Route: ", request.url);
+  console.log("Cookies: " + JSON.stringify(request.cookies));
 
-  const lastVisit=parseInt(request.cookies.lastVisit)
-  console.log("Your last visit: "+lastVisit)
-  const counterCookie=parseInt(request.cookies.counter)
-  console.log("Number of visits: ", counterCookie)
-  response.end()
-})
+  const lastVisit = parseInt(request.cookies.lastVisit);
+  console.log("Your last visit: " + lastVisit);
+  const counterCookie = parseInt(request.cookies.counter);
+  console.log("Number of visits: ", counterCookie);
+  response.end();
+});
 /*________________________________________session__________________________________*/
+app.use(session({
+  saveUninitialized: false,
+  resave: false,
+  secret: 'This123IsASecret678Sentence'
+}));
+
+app.get("/create-session", function (request, response) {
+  console.log("Route: " + request.url);
+  let counter = 1;
+  if (request.session.counter) {
+      counter = request.session.counter + 1;
+  }
+  request.session.counter = counter;
+  request.session.firstName = "Arya";
+  response.end();
+});
+
+app.get("/log-session", function (request, response) {
+  console.log("Route: " + request.url);
+  console.log("Session: " + JSON.stringify(request.session));
+  const counter = parseInt(request.session.counter);
+  console.log("number of visits: " + counter);
+  const fName = request.session.firstName;
+  console.log("Hello, " + fName);
+  response.end();
+});
 
 // runs the app and listens to the port
 app.listen(port, () => {

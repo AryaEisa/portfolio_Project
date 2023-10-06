@@ -1,0 +1,124 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+    box-sizing: content-box;
+}
+
+#main {
+    width: 90%;
+    margin: 0 auto;
+    margin-bottom: 96px;
+    margin-top: 32px;
+    box-sizing: content-box;
+    /*border: 3px solid gray;*/
+}
+/*______________________________________________footer_______________________________________________________*/
+/* Footer styling */
+footer#main {
+    background-color: none;
+    padding: 20px;
+    text-align: center;
+}
+
+/* Footer navigation styling */
+footer#main nav {
+    
+    display: flex;
+    justify-content: center;
+}
+
+/* Styling för knapparna i footern */
+.footer button {
+    background-color: none;
+    margin: 0 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    background-color: none;
+    color: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.footer button:hover {
+    background-color: none;
+}
+
+/* Styling för länkarna i knapparna */
+.footer button a {
+    text-decoration: none;
+    color: none;
+}
+
+.footer button a:hover {
+    text-decoration: none;
+    color: none;
+}
+
+/* Anpassa texten i footern */
+.footer p {
+    margin-top: 10px;
+    font-size: 14px;
+    color: red;
+}
+/*______________________________________________body_______________________________________________________*/
+body {
+    font-family: Arial, sans-serif;
+    background: url('../img/bgroundPic.gif') no-repeat fixed top center / cover;
+    background-color: #f4f4f4; /* Bakgrundsfärg om bakgrundsbilden inte laddas */
+    margin: 0;
+    padding: 20px;
+}
+/*______________________________________________card_______________________________________________________*/
+.card {
+    background-color: transparent;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 20 30 10px rgba(227, 4, 4, 0.5);
+    border: none;
+}
+
+.card-image img {
+    width: 100%;
+    height: auto; 
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.card-image img:hover {
+    box-shadow: 40px 40px 200px rgba(227, 4, 4, 0.5);
+    transform: scale(1.05);
+}
+
+
+.card-header {
+
+    padding: 20px;
+    text-align: center;
+
+}
+
+.card-title {
+    color: rgb(59, 250, 1);
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 5px;
+    
+}
+
+.card-subtitle {
+    font-size: 0.8em;
+    color: #888;
+    
+}
+/*______________________________________________h1,2,3,4,5,6_______________________________________________________*/
+h1, h2, h3, h4, h5, h6, p {
+    text-align: center;
+    margin-bottom: 20px;
+    color: rgba(255, 255, 255, 0.8); /* Justera textens färg och genomskinlighet här */
+    background: rgba(0.4, 2, 10, 0.5); /* Justera bakgrundens färg och genomskinlighet här */
+    padding: 10px; /* Justera önskad padding */
+    border-radius: 10px; /* Rundade hörn för bakgrunden */
+}

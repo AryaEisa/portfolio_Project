@@ -7,7 +7,7 @@ const app = express(); // creates the Express application
 const sqlite3 = require('sqlite3');
 const bodyParser = require('body-parser');
 const db = new sqlite3.Database('projects-jl.db');
-
+const SQLiteStore = require('connect-sqlite3')(session);
 
 // defines handlebars engine
 app.engine('handlebars', engine());
@@ -209,9 +209,52 @@ app.post('/Education/new', (req,res)=>{
   }
 })
 app.get('Education/update/:id', (req,res)=>{
-  const id=req.params
+  const id=req.params.id
+  db.get("SELECT * FROM Education WHERE sid=?", [id], function(error,theProjects){
+    if(error){
+      console.log("ERROR: ", error)
+      const model={ dbError: true, theError: error,
+      Education: {},
+    isLoggedIn: req.session.isLoggedIn,
+  name: req.session.name,
+isAdmin: req.session.isAdmin,
+}
+res.redirect("modifyproject.handlebars", model)
+    }
+    else{
+      const model={ dbError: false, theError: "",
+        Education:theProjects,
+        isLoggedIn: req.session.isLoggedIn,
+        name: req.session.name,
+        isAdmin: req.session.isAdmin,
+        helpers: {
+          theTypeR(Value) {return valure =="Research";},
+          theTypeR(Value) {return valure =="Teaching";},
+          theTypeR(Value) {return valure =="Other";},
+        }
+      }
+      res.render("modifyeducation.handlebars", model)
+    }
+  })
+});
+app.post('/Education/update/:id', (req,res)=>{
+  const id =req.session.id
+  const newp=[
+    req.body.educname, req.body.educyear, req.body.educdesc, req.body.eductype, req.body.educimg, id
+  ]
+  if(req.session.isLoggedIn==true && req.session.isAdmin==true){
+    db.run("UPDATE Education SET sname=?, syear=?, sdesc=?, stype=?, simgURL=? EHRTR sid=?", newp, (error)=>{
+      if(error){
+        console.log("ERROR: ", error)
+      } else {
+        console.log("Education updated!")
+      }
+      res.redirect('/Education')
+    })
+  } else {
+    res.redirect('/login')
+  }
 })
-
 
 
 
@@ -241,7 +284,12 @@ app.get('/experience', (req, res) => {
     })
 });
 
-
+app.use(session({
+  store: new SQLiteStore({ db: 'session-db.db' }),
+  secret: 'YourSecretKey', // Change this to a secure secret
+  resave: false,
+  saveUninitialized: false
+}));
 
 
 
@@ -315,7 +363,6 @@ app.get("/log-cookie", function (request, response) {
 });
 /*________________________________________session__________________________________*/
 
-const SQLiteStore = require('connect-sqlite3')(session);
 const sessionStore = new SQLiteStore({ db: 'session-db.db' });
 
 app.use(session({

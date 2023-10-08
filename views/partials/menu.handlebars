@@ -1,9 +1,19 @@
 <header id="menu">
-    <div>
-        <ul>
-            <li><a href="/"> Home </a></li>
-            <li><a href="/Education"> Education </a></li>
-            <li><a href="/experience"> projects </a></li>
-        </ul>
-    </div>
+    <nav>
+        <div class="navbar">
+            <section class="navbar-section">
+                <ul>
+                    <li><a href="/" class="btn btn-link"> Home </a></li>
+                    <li><a href="/Education" class="btn btn-link"> Education </a></li>
+                    <li><a href="/experience" class="btn btn-link"> projects </a></li>
+                    {{#if isLoggedIn}}
+                    <li><a href="/logout"> Logout </a></li>
+                    {{else}}
+                    <li><a href="/login" class="btn btn-link to-the-right">Login</a></li>
+                    {{/if}}
+                    
+                </ul>
+            </section>
+        </div>
+    </nav>
 </header>

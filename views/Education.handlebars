@@ -1,15 +1,50 @@
  <div id="main">
-        <div class="container">
-            <h1>About Me</h1>
-            <div class="box1">
-                <img src="../img/pro-page.jpg" alt="Profile Image" height="300" class="propic">
-                <div class="about-text">
-                    <p class="proText"> 
-                        Hello! My name is Arya. I am a passionate developer and love creating beautiful and functional websites.
-                        I have experience in HTML, CSS, JavaScript, and much more. Crafting amazing user experiences is my driving force.
-                        When I'm not coding, I enjoy exploring nature and reading a good book.
-                    </p>
+    <div class="container">
+            <h1>My Education</h1>
+            <div class="columns col-gapless">
+                <br>
+                {{#if isAdmin}}
+                <div>
+                    <a href="/Education/new" class="btn btn-link">New Education</a>
                 </div>
-            </div>
+                {{/if}}
+                {{#if dbError}}
+                    <div>
+                        Sorry, there was a problem with the database:<br />
+                        {{theError}}
+                    </div>
+                {{else}}
+                <br>
+                    {{#each Education}}
+                        <div class="column col-3 col-md-6 col-sm-12">
+                            <div class="card">
+                                <div class="card-image">
+                                    <img src="{{simgURL}}" alt="{{simgURL}}" class="img-responsive">
+                                </div>
+                                <div class="card-header">
+                                    <div class="card-title h6"><h6>{{sname}} </h6></div>
+                                    <div class="card-subtitle text-gray"><p>{{syear}} </p></div> 
+                                        <div><p> {{stype}}</p></div>
+                                    <div class="card-subtitle text-gray"><h5 id="description">description: </h5><br> {{sdesc}}  </div>
+                                </div>
+                                {{#if ../isAdmin}}
+                                <div>
+                                    <a href="/Education/update/{{sid}}">Modify</a> - <a href="/Education/delete/{{sid}}" class="important">Delete</a>
+                                </div>
+                                {{/if}}
+                            </div>
+                        </div>
+                        <br>
+                    {{/each}}
+                {{/if}}
+                
+             
         </div>
-    </div>
+</div>
+
+
+
+
+       
+ 
+

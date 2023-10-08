@@ -5,7 +5,9 @@ const cookieParser = require('cookie-parser');
 const port = 8080; // defines the port
 const app = express(); // creates the Express application
 const sqlite3 = require('sqlite3');
+const bodyParser = require('body-parser');
 const db = new sqlite3.Database('projects-jl.db');
+
 
 // defines handlebars engine
 app.engine('handlebars', engine());
@@ -14,13 +16,20 @@ app.set('view engine', 'handlebars');
 // defines the views directory
 app.set('views', './views');
 
+
+
+
 // define static directory "public" to access css/ and img/
 app.use(express.static('public'))
 app.use((req,res, next)=>{
   console.log("req. URL: ", req.url)
   next()
 })
-db.run("CREATE TABLE experience (pid INTEGER PRIMARY KEY, pname TEXT NOT NULL, pyear INTEGER NOT NULL, pdesc TEXT NOT NULL, ptype TEXT NOT NULL, pimgURL TEXT NOT NULL)", (error) => {
+
+app.use(bodyParser.urlencoded({extended: false}))
+app.use(bodyParser.json())
+/*___________________________________________________experience__________________________________________________*/
+db.run("CREATE TABLE IF NOT EXISTS experience (pid INTEGER PRIMARY KEY, pname TEXT NOT NULL, pyear INTEGER NOT NULL, pdesc TEXT NOT NULL, ptype TEXT NOT NULL, pimgURL TEXT NOT NULL)", (error) => {
   if (error) {
     // tests error: display error
     console.log("ERROR: ", error)
@@ -30,14 +39,14 @@ db.run("CREATE TABLE experience (pid INTEGER PRIMARY KEY, pname TEXT NOT NULL, p
 
     const experience=[
       { "id":"1", "name":"psychiatric assistant nurse", "type":"psychiatric section(Ryhov Hospital Jönköping)", "desc": "Involvement in healthcare within closed psychiatric care.", "year": 2021, "dev":"", "url":"/img/psyk.jpg" },
-      { "id":"2", "name":"Security Officer", "type":"CSG", "desc": "TWork in Stockholm's public transportation system as a security guard responsible for maintaining public order", "year": 2018, "url":"/img/OV.jpg" },
+      { "id":"2", "name":"Security Officer", "type":"CSG", "desc": "Worked in Stockholm's public transportation system as a security guard responsible for maintaining public order", "year": 2018, "url":"/img/OV.jpg" },
       { "id":"3", "name":"Vice CEO", "type":"Elite Sales Team INT AB", "desc": "Own business in retail", "year": 2018, "url":"/img/EST.jpg" },
-      { "id":"4", "name":"Military nurse(never worked as it)", "desc": "Trained at FbU to become military nurse, but never worked as it", "year": 2014, "type":"Försvarsutbildarna", "url":"/img/militarynurse.jpg" },
+      { "id":"4", "name":"Military nurse", "desc": "Trained at FbU to become military nurse, but never worked as it", "year": 2014, "type":"Försvarsutbildarna", "url":"/img/militarynurse.jpg" },
  
     ]
     // inserts projects
     experience.forEach( (oneProject) => {
-      db.run("INSERT INTO experience (pid, pname, pyear, pdesc, ptype, pimgURL) VALUES (?, ?, ?, ?, ?, ?)", [oneProject.id, oneProject.name, oneProject.year, oneProject.desc, oneProject.type, oneProject.url], (error) => {
+      db.run("INSERT OR IGNORE INTO experience (pid, pname, pyear, pdesc, ptype, pimgURL) VALUES (?, ?, ?, ?, ?, ?)", [oneProject.id, oneProject.name, oneProject.year, oneProject.desc, oneProject.type, oneProject.url], (error) => {
         if (error) {
           console.log("ERROR: ", error)
         } else {
@@ -47,67 +56,165 @@ db.run("CREATE TABLE experience (pid INTEGER PRIMARY KEY, pname TEXT NOT NULL, p
     })
   }
 })
-db.run("CREATE TABLE skills (sid INTEGER PRIMARY KEY, sname TEXT NOT NULL, sdesc TEXT NOT NULL, stype TEXT NOT NULL)", (error) => {
+/*___________________________________________________education__________________________________________________*/
+db.run("CREATE TABLE IF NOT EXISTS Education (sid INTEGER PRIMARY KEY, sname TEXT NOT NULL, syear INTEGER NOT NULL, sdesc TEXT NOT NULL, stype TEXT NOT NULL, simgURL TEXT NOT NULL)", (error) => {
   if (error) {
     // tests error: display error
     console.log("ERROR: ", error)
   } else {
     // tests error: no error, the table has been created
-    console.log("---> Table skills created!")
+    console.log("---> Table Education created!")
 
-    const skills=[
-      {"id":"1", "name": "Security Officer", "type": "public safety", "desc": "worked as a security officer in Stockholm night time."},
-      {"id":"2", "name": "Python", "type": "Programming language", "desc": "Programming with Python."},
-      {"id":"3", "name": "Java", "type": "Programming language", "desc": "Programming with Java."},
-      {"id":"4", "name": "ImageJ", "type": "Framework", "desc": "Java Framework for Image Processing."},
-      {"id":"5", "name": "Javascript", "type": "Programming language", "desc": "Programming with Javascript on the client side."},
-      {"id":"6", "name": "Node", "type": "Programming language", "desc": "Programming with Javascript on the server side."},
-      {"id":"7", "name": "Express", "type": "Framework", "desc": "A framework for programming Javascript on the server side."},
-      {"id":"8", "name": "Scikit-image", "type": "Library", "desc": "A library for Image Processing with Python."},
-      {"id":"9", "name": "OpenCV", "type": "Library", "desc": "A library for Image Processing with Python."},
+    const Education=[
+      
+      {"id": "5" ,"year": 2022, "name": "Jönköping university", "type": "University", "desc": "Software developer and mobile platforms (from 2022-2025)", "url":"/img/JU.jpg" },
+      {"id": "6" ,"year": 2020, "name": "International Business Management Institute (IBMI)", "type": "University", "desc": "Risk Management, Change Management, Leadership and Team Development, Project Management(from 2020-2021)", "url": "/img/IBMI.webp"},
+      {"id": "7","year": 2014, "name": "Lernia Yrkeshögskolan", "type": "pre-University", "desc": "Nurse assistent especialized in pychiatri(2014-1016)", "url": "/img/lernia.png"},
     ]
-
-    // inserts skills
-    skills.forEach( (oneSkill) => {
-      db.run("INSERT INTO skills (sid, sname, sdesc, stype) VALUES (?, ?, ?, ?)", [oneSkill.id, oneSkill.name, oneSkill.desc, oneSkill.type], (error) => {
+    // inserts projects
+    Education.forEach( (oneProject) => {
+      db.run("INSERT OR IGNORE INTO Education (sid ,sname, syear, sdesc, stype, simgURL) VALUES (? ,?, ?, ?, ?, ?)", [oneProject.id ,oneProject.name, oneProject.year, oneProject.desc, oneProject.type, oneProject.url], (error) => {
         if (error) {
           console.log("ERROR: ", error)
         } else {
-          console.log("Line added into the skills table!")
+          console.log("Line added into the Education table!")
         }
       })
     })
   }
 })
-/*
-// MODEL (DATA)
-const humans = [
-    {id: "0", name: "Jerome"}, 
-    {id: "1", name: "Mira"},
-    {id: "2", name: "Linus"}, 
-    {id: "3", name: "Susanne"}, 
-    {id: "4", name: "Jasmin"}, 
-]
-const humanss = [
-  {id: "0", name: "Jerome"}, 
-  {id: "1", name: "Mira"},
-  {id: "2", name: "Linus"}, 
-  {id: "3", name: "Susanne"}, 
-  {id: "9", name: "Jasmin"}, 
-]
-*/
-// CONTROLLER (THE BOSS)
-// defines route "/"
+ /*________________________________________________Home_________________________________________________*/ 
+ db.run("CREATE TABLE IF NOT EXISTS home (hid INTEGER PRIMARY KEY, hname TEXT NOT NULL, hyear INTEGER NOT NULL, hdesc TEXT NOT NULL, htype TEXT NOT NULL, himgURL TEXT NOT NULL)", (error) => {
+  if (error) {
+    // tests error: display error
+    console.log("ERROR: ", error)
+  } else {
+    // tests error: no error, the table has been created
+    console.log("---> Table Education created!")
+
+    const Education=[
+      
+      {"id": "8" ,"year": 1995, "name": "Bitrhday", "type": "Iran", "desc": "my birth place", "url":"/img/JU.jpg" },
+      {"id": "9" ,"year": 2009, "name": "Imigrate", "type": "Country", "desc": "moved to another country", "url": "/img/IBMI.webp"},
+      {"id": "10","year": 2020, "name": "University", "type": "Study", "desc": "Start study to become a successful engineer", "url": "/img/lernia.png"},
+    ]
+    // inserts projects
+    Education.forEach( (oneProject) => {
+      db.run("INSERT OR IGNORE INTO home (hid ,hname, hyear, hdesc, htype, himgURL) VALUES (? ,?, ?, ?, ?, ?)", [oneProject.id ,oneProject.name, oneProject.year, oneProject.desc, oneProject.type, oneProject.url], (error) => {
+        if (error) {
+          console.log("ERROR: ", error)
+        } else {
+          console.log("Line added into the home table!")
+        }
+      })
+    })
+  }
+})
+ 
+  /*_____________________________________________________________________________________________________*/   
+
+
 // renders a view WITHOUT DATA
 app.get('/', (req, res) => {
-  res.render('home');
+  console.log("SESSION: ", req.session)
+  const model={
+    isLoggedIn: req.session.isLoggedIn,
+    name: req.session.name,
+    isAdmin: req.session.isAdmin
+  }
+  res.render('home.handlebars', model);
 });
 
 
 // defines route "/humans"
 app.get('/Education', (req, res) => {
-  res.render('Education');
+  db.all("SELECT * FROM Education", function (error, theProjects) {
+      if (error) {
+          const model = {
+              dbError: true,
+              theError: error,
+              Education: [],
+              isLoggedIn:req.session.isLoggedIn,
+              name:req.session.name,
+              isAdmin:req.session.isAdmin,
+          }
+          // renders the page with the model
+          res.render("Education.handlebars", model)
+      }
+      else {
+          const model = {
+              dbError: false,
+              theError: "",
+              Education: theProjects,
+              isLoggedIn: req.session.isLoggedIn,
+              name: req.session.name,
+              isAdmin: req.session.isAdmin,
+          }
+          // renders the page with the model
+          res.render("Education.handlebars", model)
+      }
+    })
 });
+app.get('/Education/delete/:id', (req,res)=>{
+  const id=req.params.id
+  if(req.session.isLoggedIn==true && req.session.isAdmin==true){
+    db.run("DELETE FROM Education WHERE sid=?", [id], function(error, theProjects){
+      if(error){
+        const model = { dbError:true, theError: error, 
+        isLoggedIn:req.session.isLoggedIn,
+        name: req.session.name,
+      isAdmin: req.session.isAdmin,
+    }
+    res.render("home.handlebars", model)
+      } else {
+        const model={ dbError: false, theError:"",
+      isLoggedIn: req.session.isLoggedIn,
+    name: req.session.name,
+  isAdmin: req.session.isAdmin,
+}
+res.render("home.handlebars", model)
+      }
+    })
+  }else {
+    res.redirect('/login')
+  }
+});
+app.get('/Education/new', (req,res)=>{
+  if(req.session.isLoggedIn==true && req.session.isAdmin==true){
+    const model ={
+      isLoggedIn: req.session.isLoggedIn,
+      name: req.session.name,
+      isAdmin: req.session.isAdmin,
+    }
+    res.render('neweducation.handlebars', model)
+  }else{
+    res.redirect('/login')
+  }
+});
+app.post('/Education/new', (req,res)=>{
+  const newp=[
+    req.body.educname, req.body.educyear, req.body.educdesc, req.body.eductype, req.body.educimg,
+  ]
+  if(req.session.isLoggedIn==true && req.session.isAdmin==true){
+    db.run("INSERT INTO Education (sname, syear, sdesc, stype, simgURL) VALUES (?, ?, ?, ?, ?)", newp,(error)=>{
+      if(error){
+        console.log("ERROR: ", error)
+      }else{
+        console.log("Line added into Educations table!")
+      }
+      res.redirect('/Education')
+    })
+  }else{
+    res.redirect('/login')
+  }
+})
+app.get('Education/update/:id', (req,res)=>{
+  const id=req.params
+})
+
+
+
+
 
 
 // renders a view WITH DATA!!!
@@ -134,9 +241,51 @@ app.get('/experience', (req, res) => {
     })
 });
 
+
+
+
+
 // defines the final default route 404 NOT FOUND
+
+/*________________________________________login__________________________________*/
+app.get('/login', (req,res)=>{
+  const model={
+    isLoggedIn:req.session.isLoggedIn,
+    name: req.session.name,
+    isAdmin: req.session.isAdmin
+  }
+  res.render('login.handlebars', model)
+})
+app.get('/login', (req, res) => {
+  console.log("SESSION: ", req.session)
+  const model={
+    isLoggedIn:req.session.isLoggedIn,
+    name: req.session.name,
+    isAdmin: req.session.isAdmin
+  }
+  res.render('login.handlebars', model);
+});
+
 app.use(function(req,res){
   res.status(404).render('404.handlebars');
+});
+app.post('/login', (req,res)=>{
+  const un=req.body.un
+  const pw=req.body.pw
+
+if(un==="arya" && pw==="1234"){
+  console.log("Arya is logged in!")
+  req.session.isAdmin=true
+  req.session.isLoggedIn=true
+  req.session.name="Arya"
+  res.redirect('/')
+} else {
+  console.log('bad user and/or bad password')
+  req.session.isAdmin=false
+  req.session.isLoggedIn=false
+  req.session.name=""
+  res.redirect('/login')
+}
 });
 
 /*________________________________________Cookie__________________________________*/
@@ -165,12 +314,16 @@ app.get("/log-cookie", function (request, response) {
   response.end();
 });
 /*________________________________________session__________________________________*/
+
+const SQLiteStore = require('connect-sqlite3')(session);
+const sessionStore = new SQLiteStore({ db: 'session-db.db' });
+
 app.use(session({
+  store: sessionStore,
   saveUninitialized: false,
   resave: false,
-  secret: 'This123IsASecret678Sentence'
+  secret: 'This123Is@456GreatSecret678%Sentence'
 }));
-
 app.get("/create-session", function (request, response) {
   console.log("Route: " + request.url);
   let counter = 1;
@@ -179,7 +332,9 @@ app.get("/create-session", function (request, response) {
   }
   request.session.counter = counter;
   request.session.firstName = "Arya";
-  response.end();
+  request.session.save(() => {
+    response.end();
+  });
 });
 
 app.get("/log-session", function (request, response) {
@@ -192,14 +347,19 @@ app.get("/log-session", function (request, response) {
   response.end();
 });
 
+
+
+
+/*________________________________________Error__________________________________*/
+
+app.use(function(req,res){
+  res.status(404).render('404.handlebars');
+});
+
 // runs the app and listens to the port
 app.listen(port, () => {
     console.log(`Server running and listening on port ${port}...`)
-})
-
-/*
+});
 
 
 
-
-*/

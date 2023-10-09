@@ -96,7 +96,7 @@ db.run("CREATE TABLE IF NOT EXISTS Education (sid INTEGER PRIMARY KEY, sname TEX
     console.log("ERROR: ", error)
   } else {
     // tests error: no error, the table has been created
-    console.log("---> Table Education created!")
+    console.log("---> Table home created!")
 
     const Education=[
       
@@ -130,12 +130,13 @@ app.get('/', (req, res) => {
   }
   res.render('home.handlebars', model);
 });
-
+/*____________________________________CRUD Education________________________________________________*/
 
 // defines route "/humans"
 app.get('/Education', (req, res) => {
-  db.all("SELECT * FROM Education", function (error, theProjects) {
+  db.all("SELECT * FROM Education", function (error, Education) {
       if (error) {
+        console.log("SESSION: ", req.session)
           const model = {
               dbError: true,
               theError: error,
@@ -151,7 +152,7 @@ app.get('/Education', (req, res) => {
           const model = {
               dbError: false,
               theError: "",
-              Education: theProjects,
+              Education: Education,
               isLoggedIn: req.session.isLoggedIn,
               name: req.session.name,
               isAdmin: req.session.isAdmin,
@@ -161,10 +162,11 @@ app.get('/Education', (req, res) => {
       }
     })
 });
+
 app.get('/Education/delete/:id', (req,res)=>{
   const id=req.params.id
   if(req.session.isLoggedIn==true && req.session.isAdmin==true){
-    db.run("DELETE FROM Education WHERE sid=?", [id], function(error, theProjects){
+    db.run("DELETE FROM Education WHERE sid=?", [id], function(error, Education){
       if(error){
         const model = { dbError:true, theError: error, 
         isLoggedIn:req.session.isLoggedIn,
@@ -214,9 +216,9 @@ app.post('/Education/new', (req,res)=>{
     res.redirect('/login')
   }
 })
-app.get('Education/update/:id', (req,res)=>{
+app.get('/Education/update/:id', (req,res)=>{
   const id=req.params.id
-  db.get("SELECT * FROM Education WHERE sid=?", [id], function(error,theProjects){
+  db.get("SELECT * FROM Education WHERE sid=?", [id], function(error,Education){
     if(error){
       console.log("ERROR: ", error)
       const model={ dbError: true, theError: error,
@@ -225,18 +227,18 @@ app.get('Education/update/:id', (req,res)=>{
   name: req.session.name,
 isAdmin: req.session.isAdmin,
 }
-res.redirect("modifyproject.handlebars", model)
+res.redirect("modifyeducation.handlebars", model)
     }
     else{
       const model={ dbError: false, theError: "",
-        Education:theProjects,
+        Education:Education,
         isLoggedIn: req.session.isLoggedIn,
         name: req.session.name,
         isAdmin: req.session.isAdmin,
         helpers: {
-          theTypeR(Value) {return valure =="Research";},
-          theTypeR(Value) {return valure =="Teaching";},
-          theTypeR(Value) {return valure =="Other";},
+          theTypeR(value) {return value =="Research";},
+          theTypeT(value) {return value =="Teaching";},
+          theTypeO(value) {return value =="Other";},
         }
       }
       res.render("modifyeducation.handlebars", model)
@@ -249,7 +251,7 @@ app.post('/Education/update/:id', (req,res)=>{
     req.body.educname, req.body.educyear, req.body.educdesc, req.body.eductype, req.body.educimg, id
   ]
   if(req.session.isLoggedIn==true && req.session.isAdmin==true){
-    db.run("UPDATE Education SET sname=?, syear=?, sdesc=?, stype=?, simgURL=? EHRTR sid=?", newp, (error)=>{
+    db.run("UPDATE Education SET sname=?, syear=?, sdesc=?, stype=?, simgURL=? WHEHRE sid=?", newp, (error)=>{
       if(error){
         console.log("ERROR: ", error)
       } else {
@@ -261,19 +263,18 @@ app.post('/Education/update/:id', (req,res)=>{
     res.redirect('/login')
   }
 })
-
-
-
-
-
-// renders a view WITH DATA!!!
+/*____________________________________CRUD experience________________________________________________*/
 app.get('/experience', (req, res) => {
-  db.all("SELECT * FROM experience", function (error, theProjects) {
+  db.all("SELECT * FROM experience", function (error, experience) {
       if (error) {
+        console.log("SESSION: ", req.session)
           const model = {
               dbError: true,
               theError: error,
-              experience: []
+              experience: [],
+              isLoggedIn:req.session.isLoggedIn,
+              name:req.session.name,
+              isAdmin:req.session.isAdmin,
           }
           // renders the page with the model
           res.render("experience.handlebars", model)
@@ -282,7 +283,10 @@ app.get('/experience', (req, res) => {
           const model = {
               dbError: false,
               theError: "",
-              projects: theProjects
+              experience: experience,
+              isLoggedIn: req.session.isLoggedIn,
+              name: req.session.name,
+              isAdmin: req.session.isAdmin,
           }
           // renders the page with the model
           res.render("experience.handlebars", model)
@@ -290,12 +294,106 @@ app.get('/experience', (req, res) => {
     })
 });
 
-app.use(session({
-  store: new SQLiteStore({ db: 'session-db.db' }),
-  secret: 'YourSecretKey', // Change this to a secure secret
-  resave: false,
-  saveUninitialized: false
-}));
+app.get('/experience/delete/:id', (req,res)=>{
+  const id=req.params.id
+  if(req.session.isLoggedIn==true && req.session.isAdmin==true){
+    db.run("DELETE FROM experience WHERE sid=?", [id], function(error, experience){
+      if(error){
+        const model = { dbError:true, theError: error, 
+        isLoggedIn:req.session.isLoggedIn,
+        name: req.session.name,
+      isAdmin: req.session.isAdmin,
+    }
+    res.render("home.handlebars", model)
+      } else {
+        const model={ dbError: false, theError:"",
+      isLoggedIn: req.session.isLoggedIn,
+    name: req.session.name,
+  isAdmin: req.session.isAdmin,
+}
+res.render("home.handlebars", model)
+      }
+    })
+  }else {
+    res.redirect('/login')
+  }
+});
+app.get('/experience/new', (req,res)=>{
+  if(req.session.isLoggedIn==true && req.session.isAdmin==true){
+    const model ={
+      isLoggedIn: req.session.isLoggedIn,
+      name: req.session.name,
+      isAdmin: req.session.isAdmin,
+    }
+    res.render('newexperience.handlebars', model)
+  }else{
+    res.redirect('/login')
+  }
+});
+app.post('/experience/new', (req,res)=>{
+  const newp=[
+    req.body.expname, req.body.expyear, req.body.expdesc, req.body.exptype, req.body.expimg,
+  ]
+  if(req.session.isLoggedIn==true && req.session.isAdmin==true){
+    db.run("INSERT INTO experience (pname, pyear, pdesc, ptype, pimgURL) VALUES (?, ?, ?, ?, ?)", newp,(error)=>{
+      if(error){
+        console.log("ERROR: ", error)
+      }else{
+        console.log("Line added into experience table!")
+      }
+      res.redirect('/experience')
+    })
+  }else{
+    res.redirect('/login')
+  }
+})
+app.get('/experience/update/:id', (req,res)=>{
+  const id=req.params.id
+  db.get("SELECT * FROM experience WHERE sid=?", [id], function(error,experience){
+    if(error){
+      console.log("ERROR: ", error)
+      const model={ dbError: true, theError: error,
+        experience: {},
+    isLoggedIn: req.session.isLoggedIn,
+  name: req.session.name,
+isAdmin: req.session.isAdmin,
+}
+res.redirect("modifyexperience.handlebars", model)
+    }
+    else{
+      const model={ dbError: false, theError: "",
+      experience:experience,
+        isLoggedIn: req.session.isLoggedIn,
+        name: req.session.name,
+        isAdmin: req.session.isAdmin,
+        helpers: {
+          theTypeA(value) {return value =="Research";},
+          theTypeB(value) {return value =="Teaching";},
+          theTypeC(value) {return value =="Other";},
+        }
+      }
+      res.render("modifyexperience.handlebars", model)
+    }
+  })
+});
+app.post('/experience/update/:id', (req,res)=>{
+  const id =req.session.id
+  const newp=[
+    req.body.expname, req.body.expyear, req.body.expdesc, req.body.exptype, req.body.expimg, id
+  ]
+  if(req.session.isLoggedIn==true && req.session.isAdmin==true){
+    db.run("UPDATE experience SET pname=?, pyear=?, pdesc=?, ptype=?, pimgURL=? WHEHRE pid=?", newp, (error)=>{
+      if(error){
+        console.log("ERROR: ", error)
+      } else {
+        console.log("experience updated!")
+      }
+      res.redirect('/experience')
+    })
+  } else {
+    res.redirect('/login')
+  }
+})
 /*________________________________________contact me__________________________________*/
 app.get('/contact', (req,res)=>{
   res.render('contact.handlebars')
@@ -325,11 +423,73 @@ const mailOptions = {
     }
 });
 });
+/*______________________________________________________________________________________*/
 
 
-// defines the final default route 404 NOT FOUND
 
+
+// renders a view WITH DATA!!!
+app.get('/experience', (req, res) => {
+  db.all("SELECT * FROM experience", function (error, theProjects) {
+      if (error) {
+          const model = {
+              dbError: true,
+              theError: error,
+              experience: []
+          }
+          // renders the page with the model
+          res.render("experience.handlebars", model)
+      }
+      else {
+          const model = {
+              dbError: false,
+              theError: "",
+              projects: theProjects
+          }
+          // renders the page with the model
+          res.render("experience.handlebars", model)
+      }
+    })
+});
+
+
+app.get('/login',(req,res)=>{
+  const model={}
+  res.render('login.handlebars',model)
+});
+app.post('/login',(req,res)=>{
+  const un=req.body.un
+  const pw=req.body.pw
+
+  if(un=="arya" && pw=="1234"){
+    console.log("arya is logged in!")
+    req.session.isAdmin=true,
+    req.session.isLoggedIn=true,
+    req.session.name="Arya",
+    res.redirect('/')
+  } else {
+    console.log('Bad user and/or bad password')
+    req.session.isAdmin=false,
+    req.session.isLoggedIn=false,
+    req.session.name="",
+    res.redirect('/login')
+  }
+})
+
+
+
+
+
+
+app.use(session({
+  store: new SQLiteStore({ db: 'session-db.db' }),
+  secret: 'YourSecretKey', // Change this to a secure secret
+  resave: false,
+  saveUninitialized: false
+}));
 /*________________________________________login__________________________________*/
+
+/*
 app.get('/login', (req,res)=>{
   const model={
     isLoggedIn:req.session.isLoggedIn,
@@ -369,7 +529,7 @@ if(un==="arya" && pw==="1234"){
   res.redirect('/login')
 }
 });
-
+*/
 /*________________________________________Cookie__________________________________*/
 app.get("/create-cookie", function (request, response) {
   console.log("Route: " + request.url);
@@ -395,6 +555,7 @@ app.get("/log-cookie", function (request, response) {
   console.log("Number of visits: ", counterCookie);
   response.end();
 });
+
 /*________________________________________session__________________________________*/
 
 const sessionStore = new SQLiteStore({ db: 'session-db.db' });

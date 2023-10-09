@@ -1,0 +1,42 @@
+<div id="main">
+    <div>
+        <h1>Modify Education</h1>
+        <div>
+            {{#if isLoggedIn}}
+                {{#if isAdmin}}
+                    <form action="/Education/update/{{Education.sid}}" method="post">
+                        <fieldset>
+                            
+                            <label for="educname">Education Name: </label>
+                            <input type="text" name="educname" id="educname" value="{{Education.sname}}" required="required">
+                            <br />
+                            <label for="educyear"> Education year: </label>
+                            <input type="number" name="educyear" id="educyear" placeholder="2023" value="{{Education.syear}}" required="required">
+                            <br />
+                            <textarea name="educdesc" id="educdesc" cols="30" rows="10" required="required">{{Education.sdesc}}</textarea>
+                            <br />
+                            <label for="eductype">Education type: </label>
+                                <select name="eductype" id="eductype" required="required">
+                                    <option value="Research"{{#if ( theTypeR Education.stype)}} selected="selected"{{/if}}>Research</option>
+                                    <option value="Education"{{#if ( theTypeT Education.stype)}} selected="selected"{{/if}}>Education</option>
+                                    <option value="Other" {{#if ( theTypeO Education.stype)}} selected="selected"{{/if}}>Other</option>
+                                </select>
+                                <br />
+                                <label for="educimg">Education image URL: </label>
+                                <input type="text" name="educimg" id="educimg" placeholder="/img/" value="{{Education.simgURL}}" required="required">
+                                <br />
+                        </fieldset>
+                        <input type="submit" value="Add education">
+                    </form>
+                    {{else}}
+                    <p>Sorry, you must be an administrator to add a new Education!</p>
+                    {{/if}}
+                {{else}}
+                <p>
+                    Sorry, you must be logged in to add a new Education! <br />
+                    Please go to the <a href="/login"></a> page.
+                </p>
+                {{/if}}
+            </div>
+    </div>
+</div>

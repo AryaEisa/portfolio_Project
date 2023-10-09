@@ -395,35 +395,7 @@ app.post('/experience/update/:id', (req,res)=>{
     res.redirect('/login')
   }
 })
-/*________________________________________contact me__________________________________*/
-app.get('/contact', (req,res)=>{
-  res.render('contact.handlebars')
-})
-app.post('/contact', (req, res) => {
-  const { name, email, message } = req.body;
-  const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: 'poar21tp@student.ju.se',
-        pass: '2233360Arman'
-    }
-  });
-const mailOptions = {
-  from: 'poar21tp@student.ju.se',
-  to: 'arya_irse@yahoo.com',
-  subject: 'Nytt meddelande från kontaktsidan',
-  text: `Nytt meddelande från: ${name} (${email})\n\n${message}`
-  };
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-        console.error('Fel vid skickande av e-post:', error);
-        res.send('Ett fel uppstod, meddelandet kunde inte skickas.');
-    } else {
-        console.log('E-post skickad: ' + info.response);
-        res.send('Tack för ditt meddelande! E-post har skickats till mottagaren.');
-    }
-});
-});
+
 /*______________________________________________________________________________________*/
 
 
@@ -495,6 +467,11 @@ app.use(session({
   resave: false,
   saveUninitialized: false
 }));
+
+/*________________________________________contact__________________________________*/
+app.get('/contact',(req,res)=>{
+  res.render('contact.handlebars')
+})
 
 /*________________________________________Cookie__________________________________*/
 app.get("/create-cookie", function (request, response) {

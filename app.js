@@ -8,6 +8,7 @@ const sqlite3 = require('sqlite3');
 const bodyParser = require('body-parser');
 const db = new sqlite3.Database('projects-jl.db');
 const SQLiteStore = require('connect-sqlite3')(session);
+const nodemailer = require('nodemailer');
 
 // defines handlebars engine
 app.engine('handlebars', engine());
@@ -17,7 +18,12 @@ app.set('view engine', 'handlebars');
 app.set('views', './views');
 
 
-
+app.use(session({
+  store: new SQLiteStore({ db: 'session-db.db' }),
+  secret: 'DinHemligaNyckel', // Ändra detta till en säker nyckel
+  resave: false,
+  saveUninitialized: false
+}));
 
 // define static directory "public" to access css/ and img/
 app.use(express.static('public'))
@@ -290,7 +296,35 @@ app.use(session({
   resave: false,
   saveUninitialized: false
 }));
-
+/*________________________________________contact me__________________________________*/
+app.get('/contact', (req,res)=>{
+  res.render('contact.handlebars')
+})
+app.post('/contact', (req, res) => {
+  const { name, email, message } = req.body;
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: 'poar21tp@student.ju.se',
+        pass: '2233360Arman'
+    }
+  });
+const mailOptions = {
+  from: 'poar21tp@student.ju.se',
+  to: 'arya_irse@yahoo.com',
+  subject: 'Nytt meddelande från kontaktsidan',
+  text: `Nytt meddelande från: ${name} (${email})\n\n${message}`
+  };
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+        console.error('Fel vid skickande av e-post:', error);
+        res.send('Ett fel uppstod, meddelandet kunde inte skickas.');
+    } else {
+        console.log('E-post skickad: ' + info.response);
+        res.send('Tack för ditt meddelande! E-post har skickats till mottagaren.');
+    }
+});
+});
 
 
 // defines the final default route 404 NOT FOUND
@@ -393,6 +427,12 @@ app.get("/log-session", function (request, response) {
   console.log("Hello, " + fName);
   response.end();
 });
+
+
+
+
+
+
 
 
 

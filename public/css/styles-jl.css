@@ -128,4 +128,177 @@ h1, h2, h3, h4, h5, h6, p {
     border-radius: 10px; /* Rundade hörn för bakgrunden */
     font-family: 'Times New Roman', Times, serif;
 }
+/*__________________________________________ul______________________________________________*/
+#menu {
+    display: flex;
+    justify-content: space-between;
+    background-color: #333;
+    color: white;
+}
 
+.left-menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: row;
+}
+
+.left-menu li {
+    margin-right: 10px;
+}
+
+.left-menu li:last-child {
+    margin-right: 0;
+}
+
+.left-menu a {
+    color: white;
+    text-decoration: none;
+    padding: 10px 15px;
+}
+
+.left-menu a:hover {
+    background-color: #555;
+}
+
+.right-menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.right-menu li {
+    margin-left: 10px;
+}
+
+.right-menu li:first-child {
+    margin-left: 0;
+}
+
+.right-menu a {
+    color: white;
+    text-decoration: none;
+    padding: 10px 15px;
+}
+
+.right-menu a:hover {
+    background-color: #555;
+}
+/*_________________________________________________________________________________*/
+
+#login {
+    background-color: rgba(0, 0, 0, 0.8); /* Semi-transparent mörk bakgrundsfärg */
+    border-radius: 10px;
+    padding: 40px;
+    width: 300px;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3); /* Ljus skugga */
+    text-align: center;
+}
+
+#login h1 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #fff; /* Vit textfärg */
+}
+
+#login form {
+    display: flex;
+    flex-direction: column;
+}
+
+#login form fieldset {
+    border: none;
+    margin-bottom: 10px;
+}
+
+#login form label {
+    display: block;
+    margin-bottom: 5px;
+    text-align: left;
+    color: #fff; /* Vit textfärg */
+}
+
+#login form input[type="text"],
+#login form input[type="password"] {
+    width: 100%;
+    padding: 12px;
+    border-radius: 5px;
+    border: 1px solid #2b2b2b; /* Lite ljusare kantlinje */
+    margin-bottom: 10px;
+    background-color: #333; /* Lite ljusare bakgrundsfärg för input */
+    color: #fff;
+}
+
+#login form input[type="submit"] {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    background-color: #e50914;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#login form input[type="submit"]:hover {
+    background-color: #c70010;
+}
+/*_______________________________________contact_________________________________*/
+
+#contact {
+    background-color: rgba(0, 0, 0, 0.8); /* Genomskinlig svart bakgrundsfärg */
+    border-radius: 10px;
+    padding: 40px;
+    width: 300px;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3); /* Vit skugga */
+    text-align: center;
+    margin: 0 auto; /* Centrera innehållet */
+}
+
+#contact h1 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #4CAF50; /* Grön textfärg */
+}
+
+#contact form {
+    display: flex;
+    flex-direction: column;
+}
+
+#contact form label {
+    text-align: left;
+    margin-bottom: 5px;
+}
+
+#contact form input[type="text"],
+#contact form input[type="email"],
+#contact form textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #4CAF50; /* Grön kantlinje */
+    margin-bottom: 10px;
+}
+
+#contact form textarea {
+    resize: vertical;
+}
+
+#contact form input[type="submit"] {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    background-color: #4CAF50; /* Grön submit-knapp */
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#contact form input[type="submit"]:hover {
+    background-color: #45a049; /* Lite mörkare grönt vid hover */
+}

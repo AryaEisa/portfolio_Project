@@ -1,18 +1,19 @@
 <header id="menu">
-    <div>
+    <div class="left-menu">
         <ul>
-            <li><a href="/about"> About Me </a></li>
-            <li><a href="/background"> Background </a></li>
-            <li><a href="/posts"> Posts </a></li>
-            <li><a href="/"> Home </a></li>
+            <li><a href="/"> About Me </a></li>
+            <li><a href="/Education"> Education </a></li>
+            <li><a href="/experience"> Experience </a></li>
+            <li><a href="/contact"> Contact Me </a></li>
+        </ul>
+    </div>
+    <div class="right-menu">
+        <ul>
             {{#if isLoggedIn}}
-            <li><a href="/logout"> Logout </a></li>
+                <li><a href="/logout"> Logout </a></li>
             {{else}}
-            <li><a href="/login"> Login </a></li>
+                <li><a href="/login"> Login </a></li>
             {{/if}}
-            <li><a href="/projects"> Project Gallery </a></li>
-            <li><a href="/resume"> Resume </a></li>
-            <li><a href="/contact" class="contact-page"> Contact </a></li>
         </ul>
     </div>
 </header>

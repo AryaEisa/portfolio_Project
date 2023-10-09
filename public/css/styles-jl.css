@@ -17,7 +17,7 @@
 /*______________________________________________footer_______________________________________________________*/
 /* Footer styling */
 footer#main {
-    background-color: none;
+    background-color: transparent;
     padding: 20px;
     text-align: center;
 }
@@ -28,7 +28,38 @@ footer#main nav {
     display: flex;
     justify-content: center;
 }
+.footer .btn {
+    background-color: transparent;
+    margin: 0 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    background-color: transparent;
+    color: transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
 
+.footer .btn:hover {
+    background-color: transparent;
+}
+
+.footer .btn a {
+    text-decoration: none;
+    color: transparent;
+}
+
+.footer .btn a:hover {
+    text-decoration: none;
+    color: transparent;
+}
+
+.footer p {
+    margin-top: 10px;
+    font-size: 14px;
+    color: rgba(255, 0, 0, 0.8);
+}
 /* Styling för knapparna i footern */
 .footer button {
     background-color: none;
@@ -81,11 +112,20 @@ body {
     box-shadow: 20 30 10px rgba(227, 4, 4, 0.5);
     border: none;
 }
-
+.columns {
+    display: flex;
+    flex-wrap: wrap;
+    margin-left: -15px;
+    margin-right: -15px;
+}
+.column {
+    padding: 15px;
+}
 .card-image img {
     width: 100%;
     height: auto; 
     transition: box-shadow 0.3s ease, transform 0.3s ease;
+    border-radius: 10%;
 }
 
 .card-image img:hover {
@@ -108,15 +148,81 @@ body {
     margin-bottom: 5px;
     
 }
-
+.card-actions a {
+    margin-right: 10px;
+    text-decoration: none;
+    color: #333;
+}
+.card-actions a:hover {
+    color: #e74c3c;
+}
 .card-subtitle {
     font-size: 0.8em;
     color: #888;
+    margin-bottom: 10px;
     
 }
 
+/* Gemensam stil för knappar */
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* Stil för länkknapp */
+.btn-link {
+    color: #3498db;
+    background-color: transparent;
+}
+
+.btn-link:hover {
+    text-decoration: underline;
+}
+
+
+
+/* Stil för modifieringsknapp */
+.btn-modify {
+    color: #fff;
+    background-color: #27ae60;
+}
+
+.btn-modify:hover {
+    background-color: #219d54;
+}
+
+/* Stil för raderingsknapp */
+.btn-delete {
+    color: #fff;
+    background-color: #e74c3c;
+}
+
+.btn-delete:hover {
+    background-color: #d62c1a;
+}
+/* Stil för knappen New Experience */
+.btn-new-experience {
+    color: #fff;
+    background-color: #8e44ad;
+}
+
+.btn-new-experience:hover {
+    background-color: #731f8c;
+}
+
+
+
 #description{
     color: red;
+    margin-top: 10px;
+    font-size: 1rem;
 }
 /*______________________________________________h1,2,3,4,5,6_______________________________________________________*/
 h1, h2, h3, h4, h5, h6, p {
@@ -301,4 +407,25 @@ h1, h2, h3, h4, h5, h6, p {
 
 #contact form input[type="submit"]:hover {
     background-color: #45a049; /* Lite mörkare grönt vid hover */
+}
+/*_______________________________home__________________________________*/
+/* Stil för sektionen med text och bild */
+.intro-section {
+    display: flex;
+    align-items: center; /* Centrera vertikalt */
+    margin-bottom: 20px; /* Lite mellanrum mellan sektionerna */
+}
+
+/* Stil för text */
+.intro-section .text {
+    flex: 1; /* Tar upp tillgänglig plats */
+    padding: 0 20px; /* Lite mellanrum mellan text och bild */
+    background-color: rgba(255, 255, 255, 0.7); /* Lätt genomskinlig vit bakgrund för text */
+    border-radius: 10px; /* Rundade hörn */
+}
+
+/* Stil för bild */
+.intro-section .image img {
+    height: 300px;
+    opacity: 0.5; /* Genomskinlighet för bilden */
 }

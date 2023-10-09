@@ -122,6 +122,7 @@ db.run("CREATE TABLE IF NOT EXISTS Education (sid INTEGER PRIMARY KEY, sname TEX
 
 // renders a view WITHOUT DATA
 app.get('/', (req, res) => {
+  
   console.log("SESSION: ", req.session)
   const model={
     isLoggedIn: req.session.isLoggedIn,
@@ -475,6 +476,13 @@ app.post('/login',(req,res)=>{
     res.redirect('/login')
   }
 })
+app.get('/logout', (req, res) => {
+  // Clear session variables and redirect to login page
+  req.session.isAdmin = false;
+  req.session.isLoggedIn = false;
+  req.session.name = "";
+  res.redirect('/login');
+});
 
 
 
@@ -487,49 +495,7 @@ app.use(session({
   resave: false,
   saveUninitialized: false
 }));
-/*________________________________________login__________________________________*/
 
-/*
-app.get('/login', (req,res)=>{
-  const model={
-    isLoggedIn:req.session.isLoggedIn,
-    name: req.session.name,
-    isAdmin: req.session.isAdmin
-  }
-  res.render('login.handlebars', model)
-})
-app.get('/login', (req, res) => {
-  console.log("SESSION: ", req.session)
-  const model={
-    isLoggedIn:req.session.isLoggedIn,
-    name: req.session.name,
-    isAdmin: req.session.isAdmin
-  }
-  res.render('login.handlebars', model);
-});
-
-app.use(function(req,res){
-  res.status(404).render('404.handlebars');
-});
-app.post('/login', (req,res)=>{
-  const un=req.body.un
-  const pw=req.body.pw
-
-if(un==="arya" && pw==="1234"){
-  console.log("Arya is logged in!")
-  req.session.isAdmin=true
-  req.session.isLoggedIn=true
-  req.session.name="Arya"
-  res.redirect('/')
-} else {
-  console.log('bad user and/or bad password')
-  req.session.isAdmin=false
-  req.session.isLoggedIn=false
-  req.session.name=""
-  res.redirect('/login')
-}
-});
-*/
 /*________________________________________Cookie__________________________________*/
 app.get("/create-cookie", function (request, response) {
   console.log("Route: " + request.url);

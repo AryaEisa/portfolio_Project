@@ -5,7 +5,7 @@
                 <br>
                 {{#if isAdmin}}
                 <div>
-                    <a href="/experience/new" class="btn btn-link">New experience</a>
+                    <a href="/experience/new" class="btn btn-primary">New experience</a>
                 </div>
                 {{/if}}
                 {{#if dbError}}
@@ -29,7 +29,8 @@
                                 </div>
                                 {{#if ../isAdmin}}
                                 <div>
-                                    <a href="/experience/update/{{pid}}">Modify</a> - <a href="/experience/delete/{{pid}}" class="important">Delete</a>
+                                     <a href="/experience/update/{{pid}}" class="btn btn-modify">Modify</a>
+                                    <a href="/experience/delete/{{pid}}" class="btn btn-delete">Delete</a>
                                 </div>
                                 {{/if}}
                             </div>

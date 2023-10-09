@@ -5,7 +5,7 @@
                 <br>
                 {{#if isAdmin}}
                 <div>
-                    <a href="/Education/new" class="btn btn-link">New Education</a>
+                    <a href="/Education/new" class="btn btn-primary">New Education</a>
                 </div>
                 {{/if}}
                 {{#if dbError}}
@@ -29,7 +29,7 @@
                                 </div>
                                 {{#if ../isAdmin}}
                                 <div>
-                                    <a href="/Education/update/{{sid}}">Modify</a> - <a href="/Education/delete/{{sid}}" class="important">Delete</a>
+                                    <a href="/Education/update/{{sid}}" class="btn btn-modify">Modify</a> - <a href="/Education/delete/{{sid}}" class="btn btn-delete">Delete</a>
                                 </div>
                                 {{/if}}
                             </div>

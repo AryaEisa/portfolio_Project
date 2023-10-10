@@ -368,7 +368,7 @@ h1, h2, h3, h4, h5, h6, p {
   
   .Menu li {
     list-style-type: none;
-    margin-bottom: 10px; /* Lägger till mellanrum mellan ikonerna */
+    margin-bottom: 10px; 
   }
   
   .Menu li a {
@@ -379,7 +379,7 @@ h1, h2, h3, h4, h5, h6, p {
   
   .Menu li a ion-icon {
     font-size: 56px;
-    transition: transform 0.3s, box-shadow 0.3s;
+    transition: transform 0.3s, box-shadow 0.5s;
   }
   
   .Menu li a ion-icon:hover {

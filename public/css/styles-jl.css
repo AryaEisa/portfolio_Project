@@ -176,6 +176,11 @@ body {
     margin-bottom: 10px;
     
 }
+.card .card-subtitle h5#description {
+    color: red;
+    margin-top: 10px;
+    font-size: 1rem;
+}
 
 /* Gemensam stil för knappar */
 .btn {
@@ -239,14 +244,13 @@ body {
     font-size: 1rem;
 }
 /*______________________________________________h1,2,3,4,5,6_______________________________________________________*/
-h1, h2, h3, h4, h5, h6, p {
-    text-align: center;
+h1, h2, h3, h4, h5, h6, p, div {
+    margin: 0;
+    padding: 0;
+}
+h1 {
     margin-bottom: 20px;
-    color: rgba(255, 255, 255, 0.8); /* Justera textens färg och genomskinlighet här */
-    background: rgba(0.4, 2, 10, 0.5); /* Justera bakgrundens färg och genomskinlighet här */
-    padding: 10px; /* Justera önskad padding */
-    border-radius: 10px; /* Rundade hörn för bakgrunden */
-    font-family: 'Times New Roman', Times, serif;
+    text-align: center;
 }
 /*__________________________________________ul______________________________________________*/
 #menu {

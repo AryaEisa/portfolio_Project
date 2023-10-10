@@ -4,10 +4,10 @@
         <div>
             {{#if isLoggedIn}}
                 {{#if isAdmin}}
-                    <form action="/Education/new" method="post">
+                    <form action="/experience/new" method="post">
                         <fieldset>
                             
-                            <label for="educname">Experience Name: </label>
+                            <label for="expname">Experience Name: </label>
                             <input type="text" name="expname" id="expname" required="required">
                             <br />
                             <label for="expyear"> Experience year: </label>
@@ -16,7 +16,7 @@
                             <textarea name="expdesc" id="expdesc" cols="30" rows="10" required="required"></textarea>
                             <br />
                             <label for="exptype">Experience type: </label>
-                                <select name="exptype" id="eductype" required="required">
+                                <select name="exptype" id="exptype" required="required">
                                     <option value="Research">Research</option>
                                     <option value="Education">Education</option>
                                     <option value="Other">Other</option>
@@ -29,7 +29,7 @@
                         <input type="submit" value="Add experience">
                     </form>
                     {{else}}
-                    <p>Sorry, you must be an administrator to add a new Education!</p>
+                    <p>Sorry, you must be an administrator to add a new experience!</p>
                     {{/if}}
                 {{else}}
                 <p>

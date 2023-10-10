@@ -9,6 +9,7 @@ const bodyParser = require('body-parser');
 const db = new sqlite3.Database('projects-jl.db');
 const SQLiteStore = require('connect-sqlite3')(session);
 const nodemailer = require('nodemailer');
+const bcrypt = require('bcrypt') 
 
 // defines handlebars engine
 app.engine('handlebars', engine());
@@ -35,7 +36,7 @@ app.use((req,res, next)=>{
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())
 /*___________________________________________________experience__________________________________________________*/
-/*
+
 db.run("CREATE TABLE IF NOT EXISTS experience (pid INTEGER PRIMARY KEY, pname TEXT NOT NULL, pyear INTEGER NOT NULL, pdesc TEXT NOT NULL, ptype TEXT NOT NULL, pimgURL TEXT NOT NULL)", (error) => {
   if (error) {
     // tests error: display error
@@ -63,7 +64,7 @@ db.run("CREATE TABLE IF NOT EXISTS experience (pid INTEGER PRIMARY KEY, pname TE
     })
   }
 })
-*/
+
 /*___________________________________________________education__________________________________________________*/
 
 db.run("CREATE TABLE IF NOT EXISTS Education (sid INTEGER PRIMARY KEY, sname TEXT NOT NULL, syear INTEGER NOT NULL, sdesc TEXT NOT NULL, stype TEXT NOT NULL, simgURL TEXT NOT NULL)", (error) => {
@@ -94,7 +95,7 @@ db.run("CREATE TABLE IF NOT EXISTS Education (sid INTEGER PRIMARY KEY, sname TEX
 })
 
  /*________________________________________________Home_________________________________________________*/ 
- /*
+ 
  db.run("CREATE TABLE IF NOT EXISTS home (hid INTEGER PRIMARY KEY, hname TEXT NOT NULL, hyear INTEGER NOT NULL, hdesc TEXT NOT NULL, htype TEXT NOT NULL, himgURL TEXT NOT NULL)", (error) => {
   if (error) {
     // tests error: display error
@@ -121,24 +122,47 @@ db.run("CREATE TABLE IF NOT EXISTS Education (sid INTEGER PRIMARY KEY, sname TEX
     })
   }
 })
- */
+ 
   /*_____________________________________________________________________________________________________*/   
-
-
-// renders a view WITHOUT DATA
-app.get('/', (req, res) => {
-  
-  console.log("SESSION: ", req.session)
-  const model={
-    isLoggedIn: req.session.isLoggedIn,
-    name: req.session.name,
-    isAdmin: req.session.isAdmin
+/*
+  bcrypt.compare(pw, "€$#dfkwfmnlkajgej34j2314jngbkal-afv&%#MV!€#HN/%", function(err, result) {
+  if(err) {
+    console.log("Error in comparing encryption: ", err)
+  } else if (result == true ) {
+    console.log('User is Logged in!')
+    req.session.isAdmin = (user.uadmin==1)
+    req.session.isLoggedIn = true
+    req.session.name = user.uname
+    res.redirect("/")
+  } else {
+    console.log('User is NOT logged in!')
+    res.redirect("/")
   }
-  res.render('home.handlebars', model);
-});
+})
+*/
+  app.get('/', (req, res) =>{
+    console.log("SEASSON: ", req.session)
+  /*
+    saltRounds = 12
+    bcrypt.hash("toto1234", saltRounds, function(err, hash) {
+      if(err) {
+        console.log("Error encrypting the password: ", err)
+      } else {
+        console.log("Hashed password (GENRATE only ONCE): ", hash)
+      }
+    });
+    */
+    const model = {
+      isLoggedIn: req.session.isLoggedIn,
+      name: req.session.name,
+      isAdmin: req.session.isAdmin,
+    }
+    res.render('home.handlebars', model);
+  });
 /*____________________________________CRUD Education________________________________________________*/
 
 // defines route "/humans"
+
 app.get('/Education', (req, res) => {
   db.all("SELECT * FROM education", function (error, theEducation) {
       if (error) {
@@ -253,29 +277,30 @@ res.redirect("modifyeducation.handlebars", model)
 });
 
 app.post('/Education/update/:id', (req, res) => {
-  const id = req.session.id
+  const id = req.params.id
   const newp=[
     req.body.educname,
      req.body.educyear,
       req.body.educdesc,
        req.body.eductype,
         req.body.educimg,
-         id
+         id,
   ]
-  if(req.session.isLoggedIn==true && req.session.isAdmin==true){
-    db.run("UPDATE Education SET sname=?, syear=?, sdesc=?, stype=?, simgURL=? WHEHRE sid=?", newp, (error)=>{
+  if(req.session.isLoggedIn == true && req.session.isAdmin == true){
+    db.run("UPDATE education SET sname=?, syear=?, sdesc=?, stype=?, simgURL=? WHERE sid=?", newp, (error)=>{
       if(error){
         console.log("ERROR: ", error)
       } else {
         console.log("Education updated!")
       }
       res.redirect('/Education')
-    })
+    });
   } else {
     res.redirect('/login')
   }
 })
 /*____________________________________CRUD experience________________________________________________*/
+
 app.get('/experience', (req, res) => {
   db.all("SELECT * FROM experience", function (error, theExperience) {
       if (error) {
@@ -283,7 +308,7 @@ app.get('/experience', (req, res) => {
           const model = {
               dbError: true,
               theError: error,
-              experience: [],
+              Education: [],
               isLoggedIn:req.session.isLoggedIn,
               name:req.session.name,
               isAdmin:req.session.isAdmin,
@@ -309,28 +334,28 @@ app.get('/experience', (req, res) => {
 app.get('/experience/delete/:id', (req,res)=>{
   const id=req.params.id
   if(req.session.isLoggedIn==true && req.session.isAdmin==true){
-    db.run("DELETE FROM experience WHERE sid=?", [id], function(error, theExperience){
+    db.run("DELETE FROM experience WHERE pid=?", [id], function(error, theExperience){
       if(error){
         const model = { dbError:true, theError: error, 
         isLoggedIn:req.session.isLoggedIn,
         name: req.session.name,
       isAdmin: req.session.isAdmin,
     }
-    res.render("home.handlebars", model)
+    res.render("experience.handlebars", model)
       } else {
         const model={ dbError: false, theError:"",
       isLoggedIn: req.session.isLoggedIn,
     name: req.session.name,
   isAdmin: req.session.isAdmin,
 }
-res.render("home.handlebars", model)
+res.render("experience.handlebars", model)
       }
     })
   }else {
     res.redirect('/login')
   }
 });
-app.get('/experience/new', (req,res)=>{
+app.get('/experience/new', (req,res) => {
   if(req.session.isLoggedIn==true && req.session.isAdmin==true){
     const model ={
       isLoggedIn: req.session.isLoggedIn,
@@ -343,11 +368,15 @@ app.get('/experience/new', (req,res)=>{
   }
 });
 app.post('/experience/new', (req,res)=>{
-  const newp=[
-    req.body.expname, req.body.expyear, req.body.expdesc, req.body.exptype, req.body.expimg,
+  const newe=[
+    req.body.expname,
+     req.body.expyear,
+      req.body.expdesc,
+       req.body.exptype,
+        req.body.expimg,
   ]
   if(req.session.isLoggedIn==true && req.session.isAdmin==true){
-    db.run("INSERT INTO experience (pname, pyear, pdesc, ptype, pimgURL) VALUES (?, ?, ?, ?, ?)", newp,(error)=>{
+    db.run("INSERT INTO experience (pname, pyear, pdesc, ptype, pimgURL) VALUES (?, ?, ?, ?, ?)", newe,(error)=>{
       if(error){
         console.log("ERROR: ", error)
       }else{
@@ -361,7 +390,7 @@ app.post('/experience/new', (req,res)=>{
 })
 app.get('/experience/update/:id', (req,res)=>{
   const id=req.params.id
-  db.get("SELECT * FROM experience WHERE sid=?", [id], function(error, theExperience){
+  db.get("SELECT * FROM experience WHERE pid=?", [id], function(error, theExperience){
     if(error){
       console.log("ERROR: ", error)
       const model={ dbError: true, theError: error,
@@ -388,53 +417,35 @@ res.redirect("modifyexperience.handlebars", model)
     }
   })
 });
-app.post('/experience/update/:id', (req,res)=>{
-  const id =req.session.id
-  const newp=[
-    req.body.expname, req.body.expyear, req.body.expdesc, req.body.exptype, req.body.expimg, id
+
+app.post('/experience/update/:id', (req, res) => {
+  const id = req.params.id
+  const newe=[
+    req.body.expname,
+     req.body.expyear,
+      req.body.expdesc,
+       req.body.exptype,
+        req.body.expimg,
+         id,
   ]
-  if(req.session.isLoggedIn==true && req.session.isAdmin==true){
-    db.run("UPDATE experience SET pname=?, pyear=?, pdesc=?, ptype=?, pimgURL=? WHEHRE pid=?", newp, (error)=>{
+  if(req.session.isLoggedIn == true && req.session.isAdmin == true){
+    db.run("UPDATE experience SET pname=?, pyear=?, pdesc=?, ptype=?, pimgURL=? WHERE pid=?", newe, (error)=>{
       if(error){
         console.log("ERROR: ", error)
       } else {
         console.log("experience updated!")
       }
       res.redirect('/experience')
-    })
+    });
   } else {
     res.redirect('/login')
   }
 })
+/*______________________________________________________________________________________*/
 
 /*______________________________________________________________________________________*/
 
 
-
-
-// renders a view WITH DATA!!!
-app.get('/experience', (req, res) => {
-  db.all("SELECT * FROM experience", function (error, theProjects) {
-      if (error) {
-          const model = {
-              dbError: true,
-              theError: error,
-              experience: []
-          }
-          // renders the page with the model
-          res.render("experience.handlebars", model)
-      }
-      else {
-          const model = {
-              dbError: false,
-              theError: "",
-              projects: theProjects
-          }
-          // renders the page with the model
-          res.render("experience.handlebars", model)
-      }
-    })
-});
 
 
 app.get('/login',(req,res)=>{
@@ -445,7 +456,7 @@ app.post('/login',(req,res)=>{
   const un=req.body.un
   const pw=req.body.pw
 
-  if(un=="arya" && pw=="1234"){
+  if(un=="arya" && pw=="toto1234"){
     console.log("arya is logged in!")
     req.session.isAdmin=true,
     req.session.isLoggedIn=true,

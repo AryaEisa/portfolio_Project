@@ -35,6 +35,7 @@ app.use((req,res, next)=>{
 app.use(bodyParser.urlencoded({extended: false}))
 app.use(bodyParser.json())
 /*___________________________________________________experience__________________________________________________*/
+/*
 db.run("CREATE TABLE IF NOT EXISTS experience (pid INTEGER PRIMARY KEY, pname TEXT NOT NULL, pyear INTEGER NOT NULL, pdesc TEXT NOT NULL, ptype TEXT NOT NULL, pimgURL TEXT NOT NULL)", (error) => {
   if (error) {
     // tests error: display error
@@ -51,8 +52,8 @@ db.run("CREATE TABLE IF NOT EXISTS experience (pid INTEGER PRIMARY KEY, pname TE
  
     ]
     // inserts projects
-    experience.forEach( (oneProject) => {
-      db.run("INSERT OR IGNORE INTO experience (pid, pname, pyear, pdesc, ptype, pimgURL) VALUES (?, ?, ?, ?, ?, ?)", [oneProject.id, oneProject.name, oneProject.year, oneProject.desc, oneProject.type, oneProject.url], (error) => {
+    experience.forEach( (oneExperience) => {
+      db.run("INSERT OR IGNORE INTO experience (pid, pname, pyear, pdesc, ptype, pimgURL) VALUES (?, ?, ?, ?, ?, ?)", [oneExperience.id, oneExperience.name, oneExperience.year, oneExperience.desc, oneExperience.type, oneExperience.url], (error) => {
         if (error) {
           console.log("ERROR: ", error)
         } else {
@@ -62,7 +63,9 @@ db.run("CREATE TABLE IF NOT EXISTS experience (pid INTEGER PRIMARY KEY, pname TE
     })
   }
 })
+*/
 /*___________________________________________________education__________________________________________________*/
+
 db.run("CREATE TABLE IF NOT EXISTS Education (sid INTEGER PRIMARY KEY, sname TEXT NOT NULL, syear INTEGER NOT NULL, sdesc TEXT NOT NULL, stype TEXT NOT NULL, simgURL TEXT NOT NULL)", (error) => {
   if (error) {
     // tests error: display error
@@ -71,15 +74,15 @@ db.run("CREATE TABLE IF NOT EXISTS Education (sid INTEGER PRIMARY KEY, sname TEX
     // tests error: no error, the table has been created
     console.log("---> Table Education created!")
 
-    const Education=[
+    const education=[
       
       {"id": "5" ,"year": 2022, "name": "Jönköping university", "type": "University", "desc": "Software developer and mobile platforms (from 2022-2025)", "url":"/img/JU.jpg" },
       {"id": "6" ,"year": 2020, "name": "International Business Management Institute (IBMI)", "type": "University", "desc": "Risk Management, Change Management, Leadership and Team Development, Project Management(from 2020-2021)", "url": "/img/IBMI.webp"},
       {"id": "7","year": 2014, "name": "Lernia Yrkeshögskolan", "type": "pre-University", "desc": "Nurse assistent especialized in pychiatri(2014-1016)", "url": "/img/lernia.png"},
     ]
     // inserts projects
-    Education.forEach( (oneProject) => {
-      db.run("INSERT OR IGNORE INTO Education (sid ,sname, syear, sdesc, stype, simgURL) VALUES (? ,?, ?, ?, ?, ?)", [oneProject.id ,oneProject.name, oneProject.year, oneProject.desc, oneProject.type, oneProject.url], (error) => {
+    education.forEach( (oneEducation) => {
+      db.run("INSERT OR IGNORE INTO Education (sid ,sname, syear, sdesc, stype, simgURL) VALUES (? ,?, ?, ?, ?, ?)", [oneEducation.id ,oneEducation.name, oneEducation.year, oneEducation.desc, oneEducation.type, oneEducation.url], (error) => {
         if (error) {
           console.log("ERROR: ", error)
         } else {
@@ -89,7 +92,9 @@ db.run("CREATE TABLE IF NOT EXISTS Education (sid INTEGER PRIMARY KEY, sname TEX
     })
   }
 })
+
  /*________________________________________________Home_________________________________________________*/ 
+ /*
  db.run("CREATE TABLE IF NOT EXISTS home (hid INTEGER PRIMARY KEY, hname TEXT NOT NULL, hyear INTEGER NOT NULL, hdesc TEXT NOT NULL, htype TEXT NOT NULL, himgURL TEXT NOT NULL)", (error) => {
   if (error) {
     // tests error: display error
@@ -98,15 +103,15 @@ db.run("CREATE TABLE IF NOT EXISTS Education (sid INTEGER PRIMARY KEY, sname TEX
     // tests error: no error, the table has been created
     console.log("---> Table home created!")
 
-    const Education=[
+    const home=[
       
       {"id": "8" ,"year": 1995, "name": "Bitrhday", "type": "Iran", "desc": "my birth place", "url":"/img/JU.jpg" },
       {"id": "9" ,"year": 2009, "name": "Imigrate", "type": "Country", "desc": "moved to another country", "url": "/img/IBMI.webp"},
       {"id": "10","year": 2020, "name": "University", "type": "Study", "desc": "Start study to become a successful engineer", "url": "/img/lernia.png"},
     ]
     // inserts projects
-    Education.forEach( (oneProject) => {
-      db.run("INSERT OR IGNORE INTO home (hid ,hname, hyear, hdesc, htype, himgURL) VALUES (? ,?, ?, ?, ?, ?)", [oneProject.id ,oneProject.name, oneProject.year, oneProject.desc, oneProject.type, oneProject.url], (error) => {
+    home.forEach( (oneHome) => {
+      db.run("INSERT OR IGNORE INTO home (hid ,hname, hyear, hdesc, htype, himgURL) VALUES (? ,?, ?, ?, ?, ?)", [oneHome.id ,oneHome.name, oneHome.year, oneHome.desc, oneHome.type, oneHome.url], (error) => {
         if (error) {
           console.log("ERROR: ", error)
         } else {
@@ -116,7 +121,7 @@ db.run("CREATE TABLE IF NOT EXISTS Education (sid INTEGER PRIMARY KEY, sname TEX
     })
   }
 })
- 
+ */
   /*_____________________________________________________________________________________________________*/   
 
 
@@ -135,7 +140,7 @@ app.get('/', (req, res) => {
 
 // defines route "/humans"
 app.get('/Education', (req, res) => {
-  db.all("SELECT * FROM Education", function (error, Education) {
+  db.all("SELECT * FROM education", function (error, theEducation) {
       if (error) {
         console.log("SESSION: ", req.session)
           const model = {
@@ -153,7 +158,7 @@ app.get('/Education', (req, res) => {
           const model = {
               dbError: false,
               theError: "",
-              Education: Education,
+              Education: theEducation,
               isLoggedIn: req.session.isLoggedIn,
               name: req.session.name,
               isAdmin: req.session.isAdmin,
@@ -167,28 +172,28 @@ app.get('/Education', (req, res) => {
 app.get('/Education/delete/:id', (req,res)=>{
   const id=req.params.id
   if(req.session.isLoggedIn==true && req.session.isAdmin==true){
-    db.run("DELETE FROM Education WHERE sid=?", [id], function(error, Education){
+    db.run("DELETE FROM education WHERE sid=?", [id], function(error, theEducation){
       if(error){
         const model = { dbError:true, theError: error, 
         isLoggedIn:req.session.isLoggedIn,
         name: req.session.name,
       isAdmin: req.session.isAdmin,
     }
-    res.render("home.handlebars", model)
+    res.render("Education.handlebars", model)
       } else {
         const model={ dbError: false, theError:"",
       isLoggedIn: req.session.isLoggedIn,
     name: req.session.name,
   isAdmin: req.session.isAdmin,
 }
-res.render("home.handlebars", model)
+res.render("Education.handlebars", model)
       }
     })
   }else {
     res.redirect('/login')
   }
 });
-app.get('/Education/new', (req,res)=>{
+app.get('/Education/new', (req,res) => {
   if(req.session.isLoggedIn==true && req.session.isAdmin==true){
     const model ={
       isLoggedIn: req.session.isLoggedIn,
@@ -205,11 +210,11 @@ app.post('/Education/new', (req,res)=>{
     req.body.educname, req.body.educyear, req.body.educdesc, req.body.eductype, req.body.educimg,
   ]
   if(req.session.isLoggedIn==true && req.session.isAdmin==true){
-    db.run("INSERT INTO Education (sname, syear, sdesc, stype, simgURL) VALUES (?, ?, ?, ?, ?)", newp,(error)=>{
+    db.run("INSERT INTO education (sname, syear, sdesc, stype, simgURL) VALUES (?, ?, ?, ?, ?)", newp,(error)=>{
       if(error){
         console.log("ERROR: ", error)
       }else{
-        console.log("Line added into Educations table!")
+        console.log("Line added into education table!")
       }
       res.redirect('/Education')
     })
@@ -219,7 +224,7 @@ app.post('/Education/new', (req,res)=>{
 })
 app.get('/Education/update/:id', (req,res)=>{
   const id=req.params.id
-  db.get("SELECT * FROM Education WHERE sid=?", [id], function(error,Education){
+  db.get("SELECT * FROM Education WHERE sid=?", [id], function(error, theEducation){
     if(error){
       console.log("ERROR: ", error)
       const model={ dbError: true, theError: error,
@@ -232,7 +237,7 @@ res.redirect("modifyeducation.handlebars", model)
     }
     else{
       const model={ dbError: false, theError: "",
-        Education:Education,
+        Education: theEducation,
         isLoggedIn: req.session.isLoggedIn,
         name: req.session.name,
         isAdmin: req.session.isAdmin,
@@ -246,10 +251,16 @@ res.redirect("modifyeducation.handlebars", model)
     }
   })
 });
-app.post('/Education/update/:id', (req,res)=>{
-  const id =req.session.id
+
+app.post('/Education/update/:id', (req, res) => {
+  const id = req.session.id
   const newp=[
-    req.body.educname, req.body.educyear, req.body.educdesc, req.body.eductype, req.body.educimg, id
+    req.body.educname,
+     req.body.educyear,
+      req.body.educdesc,
+       req.body.eductype,
+        req.body.educimg,
+         id
   ]
   if(req.session.isLoggedIn==true && req.session.isAdmin==true){
     db.run("UPDATE Education SET sname=?, syear=?, sdesc=?, stype=?, simgURL=? WHEHRE sid=?", newp, (error)=>{
@@ -266,7 +277,7 @@ app.post('/Education/update/:id', (req,res)=>{
 })
 /*____________________________________CRUD experience________________________________________________*/
 app.get('/experience', (req, res) => {
-  db.all("SELECT * FROM experience", function (error, experience) {
+  db.all("SELECT * FROM experience", function (error, theExperience) {
       if (error) {
         console.log("SESSION: ", req.session)
           const model = {
@@ -284,7 +295,7 @@ app.get('/experience', (req, res) => {
           const model = {
               dbError: false,
               theError: "",
-              experience: experience,
+              experience: theExperience,
               isLoggedIn: req.session.isLoggedIn,
               name: req.session.name,
               isAdmin: req.session.isAdmin,
@@ -298,7 +309,7 @@ app.get('/experience', (req, res) => {
 app.get('/experience/delete/:id', (req,res)=>{
   const id=req.params.id
   if(req.session.isLoggedIn==true && req.session.isAdmin==true){
-    db.run("DELETE FROM experience WHERE sid=?", [id], function(error, experience){
+    db.run("DELETE FROM experience WHERE sid=?", [id], function(error, theExperience){
       if(error){
         const model = { dbError:true, theError: error, 
         isLoggedIn:req.session.isLoggedIn,
@@ -350,7 +361,7 @@ app.post('/experience/new', (req,res)=>{
 })
 app.get('/experience/update/:id', (req,res)=>{
   const id=req.params.id
-  db.get("SELECT * FROM experience WHERE sid=?", [id], function(error,experience){
+  db.get("SELECT * FROM experience WHERE sid=?", [id], function(error, theExperience){
     if(error){
       console.log("ERROR: ", error)
       const model={ dbError: true, theError: error,
@@ -363,7 +374,7 @@ res.redirect("modifyexperience.handlebars", model)
     }
     else{
       const model={ dbError: false, theError: "",
-      experience:experience,
+      experience: theExperience,
         isLoggedIn: req.session.isLoggedIn,
         name: req.session.name,
         isAdmin: req.session.isAdmin,
@@ -470,7 +481,12 @@ app.use(session({
 
 /*________________________________________contact__________________________________*/
 app.get('/contact',(req,res)=>{
-  res.render('contact.handlebars')
+  const model={
+    isLoggedIn: req.session.isLoggedIn,
+    name: req.session.name,
+    isAdmin: req.session.isAdmin
+  }
+  res.render('contact.handlebars', model);
 })
 
 /*________________________________________Cookie__________________________________*/

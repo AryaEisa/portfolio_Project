@@ -1,18 +1,22 @@
 <div id="main">
-    <div id="login">
-        <h1>Login</h1>
-        <div>
-            <form action="/login" method="post">
-                <fieldset>
-                    <label for="un">Username:</label>
+    <div class="wrapper">
+        <form action="/login" method="post">
+            <h1>Login</h1>
+            <div class="input-box">
+                <label for="un"  class='bx bxs-user'>Username:</label>
                     <input type="text" name="un" id="un" required="required">
-                    <br />
-                    <label for="pw">Password: </label>
+                    
+            </div>
+            <div class="input-box">
+                <label for="pw" class='bx bxs-lock-alt'>Password: </label>
                     <input type="password" name="pw" id="pw" required="required">
-                    <br />
-                </fieldset>
+                    
+            </div>
                 <input type="submit" value="Login">
-            </form>
-        </div>
-    </div>
-</div>
+             </form>       
+            </div>        
+      </div>             
+                
+                
+            
+        

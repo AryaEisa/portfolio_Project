@@ -124,34 +124,9 @@ db.run("CREATE TABLE IF NOT EXISTS Education (sid INTEGER PRIMARY KEY, sname TEX
 })
  
   /*_____________________________________________________________________________________________________*/   
-/*
-  bcrypt.compare(pw, "€$#dfkwfmnlkajgej34j2314jngbkal-afv&%#MV!€#HN/%", function(err, result) {
-  if(err) {
-    console.log("Error in comparing encryption: ", err)
-  } else if (result == true ) {
-    console.log('User is Logged in!')
-    req.session.isAdmin = (user.uadmin==1)
-    req.session.isLoggedIn = true
-    req.session.name = user.uname
-    res.redirect("/")
-  } else {
-    console.log('User is NOT logged in!')
-    res.redirect("/")
-  }
-})
-*/
+
   app.get('/', (req, res) =>{
     console.log("SEASSON: ", req.session)
-  /*
-    saltRounds = 12
-    bcrypt.hash("toto1234", saltRounds, function(err, hash) {
-      if(err) {
-        console.log("Error encrypting the password: ", err)
-      } else {
-        console.log("Hashed password (GENRATE only ONCE): ", hash)
-      }
-    });
-    */
     const model = {
       isLoggedIn: req.session.isLoggedIn,
       name: req.session.name,
@@ -442,12 +417,69 @@ app.post('/experience/update/:id', (req, res) => {
   }
 })
 /*______________________________________________________________________________________*/
+db.run("CREATE TABLE IF NOT EXISTS login (lid INTEGER PRIMARY KEY, un TEXT NOT NULL, pw TEXT NOT NULL)", (error) => {
+  if (error) {
+    console.log("ERROR: ", error);
+  } else {
+    console.log("---> Table login created!");
 
+    const login = [
+      { "id": "0001", "username": "arya", "password": "toto1234" },
+      { "id": "0002", "username": "Jerome", "password": "BestTeacher" },
+      { "id": "0003", "username": "Jasmin", "password": "dbTeacher" },
+      { "id": "0004", "username": "Linus", "password": "labAssistent" },
+      { "id": "0005", "username": "Jonkoping", "password": "University" },
+    ];
+
+    login.forEach((oneLogin) => {
+      const hash = bcrypt.hashSync(oneLogin.password, 10);
+      db.run("INSERT OR IGNORE INTO login (lid, un, pw) VALUES (?, ?, ?)", [oneLogin.id, oneLogin.username, hash], (error) => {
+        if (error) {
+          console.log("ERROR: ", error);
+        } else {
+          console.log("Line added into the login table!");
+        }
+      });
+    });
+  }
+});
 /*______________________________________________________________________________________*/
+// Handling GET request for login page
+app.get('/login', (req, res) => {
+  const model = {};
+  res.render('login.handlebars', model);
+});
 
+// Handling POST request for login
+app.post('/login', (req, res) => {
+  const un = req.body.un;
+  const pw = req.body.pw;
 
+  // You need to fetch the user from the database and compare passwords
+  db.get('SELECT * FROM login WHERE un = ?', [un], (error, user) => {
+    if (error) {
+      console.error('Error querying database:', error);
+      return res.status(500).send('Server Error');
+    }
 
+    if (user && bcrypt.compareSync(pw, user.pw)) {
+      console.log(`${user.un} is logged in!`);
 
+      req.session.isAdmin = true;
+      req.session.isLoggedIn = true;
+      req.session.name = user.un;
+      res.redirect('/');
+    } else {
+      console.log('Bad user and/or bad password');
+      req.session.isAdmin = false;
+      req.session.isLoggedIn = false;
+      req.session.name = '';
+      res.redirect('/login');
+    }
+  });
+});
+
+/*
 app.get('/login',(req,res)=>{
   const model={}
   res.render('login.handlebars',model)
@@ -470,6 +502,7 @@ app.post('/login',(req,res)=>{
     res.redirect('/login')
   }
 })
+*/
 app.get('/logout', (req, res) => {
   // Clear session variables and redirect to login page
   req.session.isAdmin = false;

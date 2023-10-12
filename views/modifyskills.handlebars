@@ -1,0 +1,43 @@
+<div id="main">
+    <div>
+        <h1>Modify Skills</h1>
+        <div>
+            {{#if isLoggedIn}}
+                {{#if isAdmin}}
+                    <form action="/skills/update/{{skills.skid}}" method="post">
+                        <fieldset>
+                            
+                            <label for="skiname">skills Name: </label>
+                            <input type="text" name="skiname" id="skiname" value="{{skills.skname}}" required="required">
+                            <br />
+                            <label for="skiyear"> Skills year: </label>
+                            <input type="number" name="skiyear" id="skiyear" placeholder="2023" value="{{skills.skyear}}" required="required">
+                            <br />
+                            <textarea name="skidesc" id="skidesc" cols="30" rows="10" required="required">{{skills.skdesc}}</textarea>
+                            <br />
+                            <label for="skitype">Skills type: </label>
+                                <select name="skitype" id="skitype" required="required">
+                                    <option value="General-Purpose Languages"{{#if (theTypeD skills.sktype)}} selected="selected"{{/if}}>General-Purpose Languages</option>
+                                    <option value="Web Development"{{#if (theTypeE skills.sktype)}} selected="selected"{{/if}}>Web Development</option>
+                                    <option value="Database Management" {{#if (theTypeF skills.sktype)}} selected="selected"{{/if}}>Database Management</option>
+                                    <option value="Scripting Languages" {{#if (theTypeG skills.sktype)}} selected="selected"{{/if}}>Scripting Languages</option>
+                                </select>
+                                <br />
+                                <label for="skiimg">Skills image URL: </label>
+                                <input type="text" name="skiimg" id="skiimg" placeholder="/img/" value="{{skills.skimgURL}}" required="required">
+                                <br />
+                        </fieldset>
+                        <input type="submit" value="Add skills">
+                    </form>
+                    {{else}}
+                    <p>Sorry, you must be an administrator to add a new Skills!</p>
+                    {{/if}}
+                {{else}}
+                <p>
+                    Sorry, you must be logged in to add a new Skills! <br />
+                    Please go to the <a href="/login"></a> page.
+                </p>
+                {{/if}}
+            </div>
+    </div>
+</div>

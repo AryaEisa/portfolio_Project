@@ -1,51 +1,48 @@
- <div id="main">
+ {{#if isAdmin}}
+            <div>
+                <a href="/experience/new" class="btn btn-primary">New experience</a>
+            </div>
+            {{/if}}
+<div id="main">
     <div class="container">
-            <h1>My Experience</h1>
-            <div class="columns col-gapless">
-                <br>
-                {{#if isAdmin}}
-                <div>
-                    <a href="/experience/new" class="btn btn-primary">New experience</a>
-                </div>
-                {{/if}}
-                {{#if dbError}}
-                    <div>
-                        Sorry, there was a problem with the database:<br />
-                        {{theError}}
+        <h1>My Experience</h1>
+        <div class="columns col-gapless">
+            <br>
+           
+            {{#if dbError}}
+            <div>
+                Sorry, there was a problem with the database:<br />
+                {{theError}}
+            </div>
+            {{else}}
+            <br>
+            {{#each experience}}
+            <div class="column col-3 col-md-6 col-sm-12" id="avs">
+                <div class="card">
+                    <div class="card-image">
+                        <img src="{{pimgURL}}" alt="{{pimgURL}}" class="img-responsive">
                     </div>
-                {{else}}
-                <br>
-                    {{#each experience}}
-                        <div class="column col-3 col-md-6 col-sm-12">
-                            <div class="card">
-                                <div class="card-image">
-                                    <img src="{{pimgURL}}" alt="{{pimgURL}}" class="img-responsive">
-                                </div>
-                                <div class="card-header">
-                                    <div class="card-title h6"><h6>{{pname}} </h6></div>
-                                    <div class="card-subtitle text-gray"><p>{{pyear}} </p></div> 
-                                        <div><p> {{ptype}}</p></div>
-                                    <div class="card-subtitle text-gray"><h5 id="description">description: </h5><br> {{pdesc}}  </div>
-                                </div>
-                                {{#if ../isAdmin}}
-                                <div>
-                                     <a href="/experience/update/{{pid}}" class="btn btn-modify">Modify</a>
-                                    <a href="/experience/delete/{{pid}}" class="btn btn-delete">Delete</a>
-                                </div>
-                                {{/if}}
-                            </div>
+                    <div class="card-content">
+                        <div class="card-header">
+                            <div class="card-title h6"><h6>{{pname}} </h6></div>
+                            <div class="card-subtitle text-gray"><p>{{pyear}} </p></div>
+                            <div><p> {{ptype}}</p></div>
                         </div>
-                        <br>
-                    {{/each}}
-                {{/if}}
-                
-             
+                        <div class="card-subtitle text-gray">
+                            <h5 id="description">description: </h5><br> {{pdesc}}
+                        </div>
+                        {{#if ../isAdmin}}
+                        <div class="card-actions">
+                            <a href="/experience/update/{{pid}}" class="btn btn-modify">Modify</a>
+                            <a href="/experience/delete/{{pid}}" class="btn btn-delete">Delete</a>
+                        </div>
+                        {{/if}}
+                    </div>
+                </div>
+            </div>
+            <br>
+            {{/each}}
+            {{/if}}
         </div>
+    </div>
 </div>
-
-
-
-
-       
- 
-

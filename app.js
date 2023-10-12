@@ -80,6 +80,7 @@ db.run("CREATE TABLE IF NOT EXISTS Education (sid INTEGER PRIMARY KEY, sname TEX
       {"id": "5" ,"year": 2022, "name": "Jönköping university", "type": "University", "desc": "Software developer and mobile platforms (from 2022-2025)", "url":"/img/JU.jpg" },
       {"id": "6" ,"year": 2020, "name": "International Business Management Institute (IBMI)", "type": "University", "desc": "Risk Management, Change Management, Leadership and Team Development, Project Management(from 2020-2021)", "url": "/img/IBMI.webp"},
       {"id": "7","year": 2014, "name": "Lernia Yrkeshögskolan", "type": "pre-University", "desc": "Nurse assistent especialized in pychiatri(2014-1016)", "url": "/img/lernia.png"},
+      {"id": "27","year": 2016, "name": "Pattern trading", "type": "private school", "desc": "forex trading and crypto trading including graph analyze", "url": "/img/pattern.png"},
     ]
     // inserts projects
     education.forEach( (oneEducation) => {
@@ -123,6 +124,36 @@ db.run("CREATE TABLE IF NOT EXISTS Education (sid INTEGER PRIMARY KEY, sname TEX
   }
 })
  
+ /*________________________________________skills_____________________________________________________________*/  
+db.run("CREATE TABLE IF NOT EXISTS skills (skid INTEGER PRIMARY KEY, skname TEXT NOT NULL, skyear INTEGER NOT NULL, skdesc TEXT NOT NULL, sktype TEXT NOT NULL, skimgURL TEXT NOT NULL)", (error) => {
+  if (error) {
+    // tests error: display error
+    console.log("ERROR: ", error)
+  } else {
+    // tests error: no error, the table has been created
+    console.log("---> Table skills created!")
+
+    const skills=[
+      
+      {"id": "1000" ,"year": 2022, "name": "C++", "type": "General-Purpose Languages:", "desc": "C++ is a versatile, high-level programming language known for efficiency and object-oriented features.", "url":"/img/c.gif" },
+      {"id": "1001" ,"year": 2022, "name": "SQL", "type": "Database Management", "desc": "Structured Query Language (SQL) is used to manage, query, and manipulate relational databases efficiently.", "url": "/img/sql.gif"},
+      {"id": "1002" ,"year": 2023, "name": "JAVA", "type": "General-Purpose Languages:", "desc": "Java is a versatile, object-oriented programming language known for its portability and wide application in software development.", "url": "/img/java.gif"},
+      {"id": "1003" ,"year": 2023, "name": "javascript", "type": "Scripting Languages", "desc": "JavaScript is a versatile, high-level programming language primarily used for web development to create dynamic and interactive user interfaces.", "url": "/img/js.gif"},
+      {"id": "1004" ,"year": 2023, "name": "HTML/Handlebars", "type": "Web Development", "desc": "HTML (HyperText Markup Language) is the standard markup language used to create the structure and content of web pages. Handlebars is a templating engine that simplifies HTML generation by allowing dynamic content insertion through placeholders and data binding.", "url": "/img/hb.gif"},
+      {"id": "1005","year": 20223, "name": "CSS", "type": "Web Development", "desc": "CSS (Cascading Style Sheets) is a stylesheet language used to control the layout, appearance, and formatting of HTML elements in a web page.", "url": "/img/css.gif"},
+    ]
+    // inserts projects
+    skills.forEach( (oneSkills) => {
+      db.run("INSERT OR IGNORE INTO skills (skid ,skname, skyear, skdesc, sktype, skimgURL) VALUES (? ,?, ?, ?, ?, ?)", [oneSkills.id ,oneSkills.name, oneSkills.year, oneSkills.desc, oneSkills.type, oneSkills.url], (error) => {
+        if (error) {
+          console.log("ERROR: ", error)
+        } else {
+          console.log("Line added into the skills table!")
+        }
+      })
+    })
+  }
+})
   /*_____________________________________________________________________________________________________*/   
 
   app.get('/', (req, res) =>{
@@ -134,6 +165,145 @@ db.run("CREATE TABLE IF NOT EXISTS Education (sid INTEGER PRIMARY KEY, sname TEX
     }
     res.render('home.handlebars', model);
   });
+  /*______________________________________________CRUD skills_______________________________________________________*/  
+
+  app.get('/skills', (req, res) => {
+    db.all("SELECT * FROM skills", function (error, theSkills) {
+        if (error) {
+          console.log("SESSION: ", req.session)
+            const model = {
+                dbError: true,
+                theError: error,
+                skills: [],
+                isLoggedIn:req.session.isLoggedIn,
+                name:req.session.name,
+                isAdmin:req.session.isAdmin,
+            }
+            // renders the page with the model
+            res.render("skills.handlebars", model)
+        }
+        else {
+            const model = {
+                dbError: false,
+                theError: "",
+                skills: theSkills,
+                isLoggedIn: req.session.isLoggedIn,
+                name: req.session.name,
+                isAdmin: req.session.isAdmin,
+            }
+            // renders the page with the model
+            res.render("skills.handlebars", model)
+        }
+      })
+  });
+  
+  app.get('/skills/delete/:id', (req,res)=>{
+    const id=req.params.id
+    if(req.session.isLoggedIn==true && req.session.isAdmin==true){
+      db.run("DELETE FROM skills WHERE skid=?", [id], function(error, theSkills){
+        if(error){
+          const model = { dbError:true, theError: error, 
+          isLoggedIn:req.session.isLoggedIn,
+          name: req.session.name,
+        isAdmin: req.session.isAdmin,
+      }
+      res.render("skills.handlebars", model)
+        } else {
+          const model={ dbError: false, theError:"",
+        isLoggedIn: req.session.isLoggedIn,
+      name: req.session.name,
+    isAdmin: req.session.isAdmin,
+  }
+  res.render("home.handlebars", model)
+        }
+      })
+    }else {
+      res.redirect('/login')
+    }
+  });
+  app.get('/skills/new', (req,res) => {
+    if(req.session.isLoggedIn==true && req.session.isAdmin==true){
+      const model ={
+        isLoggedIn: req.session.isLoggedIn,
+        name: req.session.name,
+        isAdmin: req.session.isAdmin,
+      }
+      res.render('newskills.handlebars', model)
+    }else{
+      res.redirect('/login')
+    }
+  });
+  app.post('/skills/new', (req,res)=>{
+    const newsk=[
+      req.body.skiname, req.body.skiyear, req.body.skidesc, req.body.skitype, req.body.skiimg,
+    ]
+    if(req.session.isLoggedIn==true && req.session.isAdmin==true){
+      db.run("INSERT INTO skills (skname, skyear, skdesc, sktype, skimgURL) VALUES (?, ?, ?, ?, ?)", newsk,(error)=>{
+        if(error){
+          console.log("ERROR: ", error)
+        }else{
+          console.log("Line added into skills table!")
+        }
+        res.redirect('/skills')
+      })
+    }else{
+      res.redirect('/login')
+    }
+  })
+  app.get('/skills/update/:id', (req,res)=>{
+    const id=req.params.id
+    db.get("SELECT * FROM skills WHERE skid=?", [id], function(error, theSkills){
+      if(error){
+        console.log("ERROR: ", error)
+        const model={ dbError: true, theError: error,
+        skills: {},
+      isLoggedIn: req.session.isLoggedIn,
+    name: req.session.name,
+  isAdmin: req.session.isAdmin,
+  }
+  res.redirect("modifyskills.handlebars", model)
+      }
+      else{
+        const model={ dbError: false, theError: "",
+          skills: theSkills,
+          isLoggedIn: req.session.isLoggedIn,
+          name: req.session.name,
+          isAdmin: req.session.isAdmin,
+          helpers: {
+            theTypeD(value) {return value =="General-Purpose Languages";},
+            theTypeE(value) {return value =="Web Development";},
+            theTypeF(value) {return value =="Database Management";},
+            theTypeG(value) {return value =="Scripting Languages";},
+          }
+        }
+        res.render("modifyskills.handlebars", model)
+      }
+    })
+  });
+  
+  app.post('/skills/update/:id', (req, res) => {
+    const id = req.params.id
+    const newsk=[
+      req.body.skiname,
+       req.body.skiyear,
+        req.body.skidesc,
+         req.body.skitype,
+          req.body.skiimg,
+           id,
+    ]
+    if(req.session.isLoggedIn == true && req.session.isAdmin == true){
+      db.run("UPDATE skills SET skname=?, skyear=?, skdesc=?, sktype=?, skimgURL=? WHERE skid=?", newsk, (error)=>{
+        if(error){
+          console.log("ERROR: ", error)
+        } else {
+          console.log("skills updated!")
+        }
+        res.redirect('/skills')
+      });
+    } else {
+      res.redirect('/login')
+    }
+  })
 /*____________________________________CRUD Education________________________________________________*/
 
 // defines route "/humans"
@@ -185,7 +355,7 @@ app.get('/Education/delete/:id', (req,res)=>{
     name: req.session.name,
   isAdmin: req.session.isAdmin,
 }
-res.render("Education.handlebars", model)
+res.render("home.handlebars", model)
       }
     })
   }else {
@@ -323,7 +493,7 @@ app.get('/experience/delete/:id', (req,res)=>{
     name: req.session.name,
   isAdmin: req.session.isAdmin,
 }
-res.render("experience.handlebars", model)
+res.render("home.handlebars", model)
       }
     })
   }else {

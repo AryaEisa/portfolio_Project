@@ -1,0 +1,54 @@
+ {{#if isAdmin}}
+                <div>
+                    <a href="/skills/new" class="btn btn-primary">New skills</a>
+                </div>
+                {{/if}}
+ <div id="main">
+    <h1>My IT skills</h1>
+    <br />
+    <div class="container">
+            
+                <br />
+            <div class="columns col-gapless">
+                <br>
+                
+                {{#if dbError}}
+                    <div>
+                        Sorry, there was a problem with the database:<br />
+                        {{theError}}
+                    </div>
+                {{else}}
+                <br>
+                    {{#each skills}}
+                        <div class="column col-3 col-md-6 col-sm-12" id="avs">
+                            <div class="card">
+                                <div class="card-image">
+                                    <img src="{{skimgURL}}" alt="{{skimgURL}}" class="img-responsive">
+                                </div>
+                                <div class="card-header">
+                                    <div class="card-title h6"><h6>{{skname}} </h6></div>
+                                    <div class="card-subtitle text-gray"><p>{{skyear}} </p></div> 
+                                        <div><p> {{sktype}}</p></div>
+                                    <div class="card-subtitle text-gray"><h5 id="description">description: </h5><br> {{skdesc}}  </div>
+                                </div>
+                                {{#if ../isAdmin}}
+                                <div>
+                                    <a href="/skills/update/{{skid}}" class="btn btn-modify">Modify</a> - <a href="/skills/delete/{{skid}}" class="btn btn-delete">Delete</a>
+                                </div>
+                                {{/if}}
+                            </div>
+                        </div>
+                        <br>
+                    {{/each}}
+                {{/if}}
+                
+             
+        </div>
+</div>
+
+
+
+
+       
+ 
+
